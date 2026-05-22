@@ -32,7 +32,9 @@ const ProjectsSection = ({ title = "Projects" }) => {
               rel="noopener noreferrer"
               className="text-orange-400 hover:text-orange-300 transition-colors"
             >
-              <ExternalLinkIcon className="w-4 h-4" />
+              {typeof ExternalLinkIcon === "function" ? (
+                <ExternalLinkIcon className="w-4 h-4" />
+              ) : null}
             </a>
           </div>
           <p className="text-orange-300 text-sm mt-1">{project.tech}</p>

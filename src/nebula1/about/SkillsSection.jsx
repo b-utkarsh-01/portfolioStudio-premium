@@ -79,7 +79,9 @@ const SkillsSection = ({ title = "Skills" }) => {
             className="cursor-target rounded-2xl border border-slate-700 bg-slate-900/60 p-4"
           >
             <h3 className="text-slate-100 font-semibold flex items-center gap-2 mb-3">
-              <Icon className={["h-4 w-4", iconClassName].join(" ")} />
+              {typeof Icon === "function" ? (
+                <Icon className={["h-4 w-4", iconClassName].join(" ")} />
+              ) : null}
               {title}
             </h3>
             <div className="flex flex-wrap gap-2">

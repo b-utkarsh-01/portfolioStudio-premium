@@ -27,7 +27,7 @@ const ExperienceSection = ({ title = "Experience" }) => {
           <h3 className="text-base sm:text-lg font-semibold text-slate-100">{item.title}</h3>
           <p className="text-orange-300 text-sm">{item.company}</p>
           <p className="text-slate-400 text-xs sm:text-sm flex items-center gap-2 mt-1">
-            <CalendarIcon className="w-4 h-4" />
+            {typeof CalendarIcon === "function" ? <CalendarIcon className="w-4 h-4" /> : null}
             {item.period}
           </p>
           <p className="text-slate-300 text-sm mt-2 leading-relaxed">{item.description}</p>
