@@ -1,4 +1,12 @@
 import { createContext, createElement, useContext, useMemo } from "react";
+import {
+  contactIcons,
+  experienceIcons,
+  projectIcons,
+  sectionIcons,
+  skillGroupIcons,
+  skillIcons,
+} from "../../about/aboutData";
 
 const defaultPortfolioData = {
   profile: {
@@ -24,12 +32,12 @@ const defaultPortfolioData = {
   layout: {
     stages: [],
   },
-  sectionIcons: {},
-  experienceIcons: {},
-  projectIcons: {},
-  contactIcons: {},
-  skillGroupIcons: {},
-  skillIcons: {},
+  sectionIcons,
+  experienceIcons,
+  projectIcons,
+  contactIcons,
+  skillGroupIcons,
+  skillIcons,
 };
 
 const PortfolioDataContext = createContext(defaultPortfolioData);
