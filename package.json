@@ -1,0 +1,7 @@
+{
+  "name": "portfolio-studio-premium",
+  "version": "1.0.0",
+  "private": false,
+  "type": "module",
+  "main": "src/index.js"
+}
