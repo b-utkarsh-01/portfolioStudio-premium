@@ -1,7 +1,5 @@
 export { premiumV1Template, PREMIUM_TEMPLATE_IDS } from "./nebula1/premium-v1.template";
 
-export { default as ProtectedRoute } from "./nebula1/routing/ProtectedRoute";
-export { default as MarketingLayout } from "./nebula1/layout/MarketingLayout";
 export { default as TemplateV1Layout } from "./nebula1/layout/TemplateV1Layout";
 
 export { default as HeroSection } from "./nebula1/about/HeroSection";
