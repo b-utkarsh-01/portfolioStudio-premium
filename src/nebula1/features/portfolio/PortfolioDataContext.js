@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, createElement, useContext, useMemo } from "react";
 
 const defaultPortfolioData = {
   profile: {
@@ -36,7 +36,7 @@ const PortfolioDataContext = createContext(defaultPortfolioData);
 
 export const PortfolioDataProvider = ({ value, children }) => {
   const data = useMemo(() => ({ ...defaultPortfolioData, ...(value || {}) }), [value]);
-  return <PortfolioDataContext.Provider value={data}>{children}</PortfolioDataContext.Provider>;
+  return createElement(PortfolioDataContext.Provider, { value: data }, children);
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
