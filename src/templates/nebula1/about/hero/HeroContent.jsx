@@ -19,9 +19,7 @@ const HeroContent = ({ profile, shortSummary }) => {
         showCursor
         cursorCharacter="_"
         deletingSpeed={50}
-        variableSpeedEnabled={false}
-        variableSpeedMin={60}
-        variableSpeedMax={120}
+        variableSpeed={null}
         cursorBlinkDuration={0.5}
         className="hero-text-animate text-lg font-semibold leading-tight text-slate-300 sm:text-[2rem]"
       />
@@ -68,4 +66,3 @@ const HeroContent = ({ profile, shortSummary }) => {
 };
 
 export default HeroContent;
-

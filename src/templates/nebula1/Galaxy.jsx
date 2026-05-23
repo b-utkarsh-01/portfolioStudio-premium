@@ -1,5 +1,5 @@
 import { Renderer, Program, Mesh, Color, Triangle } from 'ogl';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const vertexShader = `
 attribute vec2 uv;
@@ -196,16 +196,26 @@ export default function Galaxy({
   const targetMouseActive = useRef(0.0);
   const smoothMouseActive = useRef(0.0);
   const hasReportedReady = useRef(false);
+  const [webglFailed, setWebglFailed] = useState(false);
 
   useEffect(() => {
     if (!ctnDom.current) return;
     hasReportedReady.current = false;
     const ctn = ctnDom.current;
-    const renderer = new Renderer({
-      alpha: transparent,
-      premultipliedAlpha: false
-    });
-    const gl = renderer.gl;
+    let renderer;
+    let gl;
+    try {
+      renderer = new Renderer({
+        alpha: transparent,
+        premultipliedAlpha: false
+      });
+      gl = renderer.gl;
+      setWebglFailed(false);
+    } catch (error) {
+      setWebglFailed(true);
+      onReady?.();
+      return;
+    }
 
     if (transparent) {
       gl.enable(gl.BLEND);
@@ -320,7 +330,9 @@ export default function Galaxy({
           ctn.removeEventListener('mouseleave', handleMouseLeave);
         }
       }
-      ctn.removeChild(gl.canvas);
+      if (gl?.canvas && gl.canvas.parentNode === ctn) {
+        ctn.removeChild(gl.canvas);
+      }
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };
   }, [
@@ -343,6 +355,10 @@ export default function Galaxy({
     trackGlobalMouse,
     onReady
   ]);
+
+  if (webglFailed) {
+    return <div className="h-full w-full bg-[radial-gradient(circle_at_50%_35%,rgba(99,102,241,0.25),rgba(15,23,42,0.92)_55%,rgba(2,6,23,0.98)_100%)]" />;
+  }
 
   return <div ref={ctnDom} className="w-full h-full relative" {...rest} />;
 }

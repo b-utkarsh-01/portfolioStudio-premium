@@ -24,7 +24,7 @@ const TemplateV1Layout = ({
 
   return (
     <PortfolioDataProvider value={portfolioData}>
-      <div className={`relative min-h-screen overflow-x-hidden ${theme.bgClassName} text-white`}>
+      <div className={`relative min-h-screen overflow-x-hidden ${theme.bgClassName} ${theme.textClassName || "text-white"}`}>
         {showGalaxy ? (
           <div className="pointer-events-none fixed inset-0 z-0">
             <Galaxy
@@ -65,3 +65,4 @@ const TemplateV1Layout = ({
 };
 
 export default TemplateV1Layout;
+

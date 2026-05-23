@@ -310,6 +310,7 @@ export const GridScan = ({
 
   const [modelsReady, setModelsReady] = useState(false);
   const [uiFaceActive, setUiFaceActive] = useState(false);
+  const [webglFailed, setWebglFailed] = useState(false);
 
   const lookTarget = useRef(new THREE.Vector2(0, 0));
   const tiltTarget = useRef(0);
@@ -414,7 +415,14 @@ export const GridScan = ({
     const container = containerRef.current;
     if (!container) return;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      setWebglFailed(false);
+    } catch (error) {
+      setWebglFailed(true);
+      return;
+    }
     rendererRef.current = renderer;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
@@ -574,7 +582,9 @@ export const GridScan = ({
         composerRef.current = null;
       }
       renderer.dispose();
-      container.removeChild(renderer.domElement);
+      if (renderer.domElement.parentNode === container) {
+        container.removeChild(renderer.domElement);
+      }
     };
   }, [
     sensitivity,
@@ -792,6 +802,19 @@ export const GridScan = ({
       }
     };
   }, [enableWebcam, modelsReady, depthResponse]);
+
+  if (webglFailed) {
+    return (
+      <div
+        className={`relative w-full h-full overflow-hidden ${className ?? ''}`}
+        style={{
+          background:
+            'radial-gradient(circle at 50% 20%, rgba(236,72,153,0.24), rgba(15,23,42,0.9) 48%, rgba(2,6,23,0.98) 100%)',
+          ...style
+        }}
+      />
+    );
+  }
 
   return (
     <div

@@ -15,14 +15,6 @@ const HeroSection = ({ appReady = true }) => {
   useEffect(() => {
     if (!appReady) return;
     const ctx = gsap.context(() => {
-      gsap.to(".ut-logo-container", {
-        y: -6,
-        duration: 2.8,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut",
-      });
-
       gsap.from(".hero-text-animate", {
         opacity: 0,
         y: 20,
@@ -41,9 +33,11 @@ const HeroSection = ({ appReady = true }) => {
       className="relative no-cursor-target w-full overflow-hidden rounded-3xl bg-[#040b1d] px-4 py-7 sm:px-6 sm:py-10"
     >
       <HeroBackground />
-      <div className="mb-6 flex w-full flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
-        <ProfileName name={profile.name} />
-        <HeroClock className="z-0 w-fit self-start sm:mt-1 sm:self-auto" />
+      <div className="mb-6 flex w-full items-start justify-between gap-3 sm:mb-8 sm:items-center">
+        <div className="min-w-0 flex-1 pr-2">
+          <ProfileName name={profile.name} />
+        </div>
+        <HeroClock className="z-0 w-fit flex-shrink-0 self-start sm:mt-1 sm:self-auto" />
       </div>
       <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-8 sm:gap-12 md:flex-row md:items-center">
         <HeroContent
