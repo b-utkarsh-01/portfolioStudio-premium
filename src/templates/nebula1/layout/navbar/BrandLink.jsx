@@ -7,7 +7,7 @@ const BrandLink = () => {
   const { pathname } = useLocation();
   const isTemplatePreview = pathname === "/templates/portfolio-v1";
   const resolvedName = (badgeName?.name || "").trim() || (profile?.name || "").trim() || "Portfolio";
-  const brandText = isTemplatePreview ? "Template 1" : resolvedName;
+  const brandText = isTemplatePreview ? "Template 1" : resolvedName.toUpperCase();
 
   return (
     <a
@@ -20,4 +20,3 @@ const BrandLink = () => {
 };
 
 export default BrandLink;
-
