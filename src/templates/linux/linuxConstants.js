@@ -27,6 +27,7 @@ export const COMMAND_LIST = [
   { name: "projects", desc: "Display list of projects with tech stacks and links" },
   { name: "experience", desc: "Render experiences and education in a vertical ASCII timeline" },
   { name: "contact", desc: "Print available social links, email, and phone contact points" },
+  { name: "time", desc: "Show current weekday, date, and local time" },
   { name: "neofetch", desc: "Show system parameters alongside a retro ASCII computer logo" },
   { name: "color", desc: "Switch terminal color palette (Usage: color amber)" },
   { name: "clear or cls", desc: "Wipe clean the active terminal console screen history" }

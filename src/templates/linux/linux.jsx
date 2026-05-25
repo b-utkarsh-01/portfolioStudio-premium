@@ -8,6 +8,17 @@ import { COMMAND_LIST, THEME_PALETTES, WELCOME_BANNER } from "./linuxConstants";
 import { executeLinuxCommand } from "./linuxCommandEngine";
 import { getFormattedUptime, getSuggestions, getWelcomeOutputLogs, parseLinuxData } from "./linuxHelpers";
 
+const renderTypedBanner = (lines, activeLineIdx) => (
+  <div className="font-mono text-xs opacity-80">
+    {lines.map((line, idx) => (
+      <div key={`welcome-line-${idx}`} className="min-h-[14px]">
+        {line}
+        {idx === activeLineIdx ? <span className="inline-block w-[8px] animate-pulse">_</span> : null}
+      </div>
+    ))}
+  </div>
+);
+
 const LinuxPortfolio = ({ data }) => {
   if (!data) return null;
 
@@ -39,32 +50,54 @@ const LinuxPortfolio = ({ data }) => {
 
   useEffect(() => {
     const lines = WELCOME_BANNER.split("\n");
+    const typedLines = [""];
     let lineIdx = 0;
+    let charIdx = 0;
+    let isCancelled = false;
+    let timeoutId = null;
 
-    setConsoleLogs([
-      {
-        type: "output",
-        content: <div className="font-mono text-xs opacity-80">{lines[0]}</div>
+    const pushBannerFrame = () => {
+      const activeLineIdx = lineIdx >= lines.length ? -1 : lineIdx;
+      setConsoleLogs([
+        {
+          type: "output",
+          content: renderTypedBanner([...typedLines], activeLineIdx)
+        }
+      ]);
+    };
+
+    pushBannerFrame();
+
+    const typeNextChar = () => {
+      if (isCancelled) return;
+
+      if (lineIdx >= lines.length) {
+        pushBannerFrame();
+        return;
       }
-    ]);
-    lineIdx = 1;
 
-    const interval = setInterval(() => {
-      if (lineIdx < lines.length) {
-        setConsoleLogs((prev) => [
-          ...prev,
-          {
-            type: "output",
-            content: <div className="font-mono text-xs opacity-80 min-h-[14px]">{lines[lineIdx]}</div>
-          }
-        ]);
-        lineIdx += 1;
-      } else {
-        clearInterval(interval);
+      const activeLine = lines[lineIdx] ?? "";
+
+      if (charIdx < activeLine.length) {
+        typedLines[lineIdx] += activeLine[charIdx];
+        charIdx += 1;
+        pushBannerFrame();
+        timeoutId = setTimeout(typeNextChar, 28);
+        return;
       }
-    }, 120);
 
-    return () => clearInterval(interval);
+      lineIdx += 1;
+      charIdx = 0;
+      if (lineIdx < lines.length) typedLines.push("");
+      pushBannerFrame();
+      timeoutId = setTimeout(typeNextChar, 180);
+    };
+
+    timeoutId = setTimeout(typeNextChar, 180);
+    return () => {
+      isCancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {

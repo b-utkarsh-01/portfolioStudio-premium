@@ -6,8 +6,17 @@ const LinuxCrtStyles = () => (
       100% { opacity: 0.985; }
     }
 
+    @keyframes terminal-hard-blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+
     .crt-screen {
       animation: crt-flicker 0.18s infinite;
+    }
+
+    .terminal-hard-caret {
+      animation: terminal-hard-blink 1s steps(1, end) infinite;
     }
 
     .crt-scanlines::after {

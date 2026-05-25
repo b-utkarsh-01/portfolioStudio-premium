@@ -1,4 +1,4 @@
-﻿import { ASCII_MONITOR, THEME_PALETTES } from "./linuxConstants";
+import { ASCII_MONITOR, THEME_PALETTES } from "./linuxConstants";
 
 export const executeLinuxCommand = ({
   cmdName,
@@ -188,6 +188,31 @@ export const executeLinuxCommand = ({
         )
       };
 
+    case "time":
+    case "date": {
+      const now = new Date();
+      const fullDate = now.toLocaleDateString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric"
+      });
+      const fullTime = now.toLocaleTimeString(undefined, {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit"
+      });
+
+      return {
+        output: (
+          <div className="space-y-1 max-w-3xl font-mono text-xs">
+            <p><span className={`${palette.text} font-bold`}>DAY:</span> {fullDate}</p>
+            <p><span className={`${palette.text} font-bold`}>TIME:</span> {fullTime}</p>
+          </div>
+        )
+      };
+    }
+
     case "neofetch":
     case "sys":
       return {
@@ -282,4 +307,5 @@ export const executeLinuxCommand = ({
     }
   }
 };
+
 

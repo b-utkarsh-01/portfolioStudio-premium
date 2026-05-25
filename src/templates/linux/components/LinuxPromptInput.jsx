@@ -15,7 +15,7 @@ const LinuxPromptInput = ({ palette, inputRef, inputVal, setInputVal, handleKeyD
       <span className={`${palette.textCommand} select-text pointer-events-auto break-all whitespace-pre-wrap`}>
         {inputVal}
       </span>
-      <span className={`inline-block w-2.5 h-4 ${palette.inputCaret} animate-pulse ml-0.5 shrink-0`} />
+      <span className={`inline-block w-2.5 h-4 ${palette.inputCaret} terminal-hard-caret ml-0.5 shrink-0`} />
     </div>
   </div>
 );
