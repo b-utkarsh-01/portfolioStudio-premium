@@ -527,11 +527,16 @@ export const TestimonialsSection = ({ socialStage, testimonials }) => {
 
 export const CustomStagesSection = ({ customStages }) => {
   if (!customStages || customStages.length === 0) return null;
+  const getStageBadge = (value) => {
+    const base = `${value || ""}`.trim();
+    if (!base) return "CUSTOM_STAGE";
+    return base.toUpperCase().replace(/\s+/g, "_");
+  };
   return (
     <>
       {customStages.map((stage) => (
         <Section key={stage.id} className="col-span-1 md:col-span-12" sysRef={`SYS_NODE_${(stage.id || 'CUST').substring(0, 4).toUpperCase()}`}>
-          <SectionHeading label="STAGE_LOG" title={stage.title || "Custom Node"} icon={Terminal} />
+          <SectionHeading label={getStageBadge(stage.title)} title={stage.title || "Custom Stage"} icon={Terminal} />
           {stage.kind === "cards" ? (
             <div className="grid gap-4 sm:grid-cols-2">
               {stage.cards.map((card, idx) => (

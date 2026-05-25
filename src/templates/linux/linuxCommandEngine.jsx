@@ -74,7 +74,9 @@ export const executeLinuxCommand = ({
     }
 
     default: {
-      const matchedCustom = customStages.find((stage) => stage.id === cmdName);
+      const matchedCustom = customStages.find(
+        (stage) => stage.id === cmdName || stage.commandName === cmdName
+      );
       if (!matchedCustom) {
         return {
           output: <p className="text-rose-500">bash: command not found: '{trimmed}'. Type 'help' to view catalog.</p>
@@ -87,4 +89,3 @@ export const executeLinuxCommand = ({
     }
   }
 };
-

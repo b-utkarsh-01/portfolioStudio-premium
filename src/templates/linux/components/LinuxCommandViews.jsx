@@ -12,8 +12,8 @@ export const renderHelpView = ({ palette, commandList, customStages }) => (
       ))}
       {customStages.map((stage) => (
         <div key={stage.id} className="contents">
-          <span className="text-[#ff00ff] font-semibold">{`/${stage.id}`}</span>
-          <span className="opacity-80">{`Display custom stage: ${stage.title || stage.id}`}</span>
+          <span className="text-[#ff00ff] font-semibold">{`/${stage.commandName || stage.id}`}</span>
+          <span className="opacity-80">{`Display custom stage: ${stage.title || stage.commandName || stage.id}`}</span>
         </div>
       ))}
     </div>
