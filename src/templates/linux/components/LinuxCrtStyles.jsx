@@ -19,6 +19,31 @@ const LinuxCrtStyles = () => (
       animation: terminal-hard-blink 1s steps(1, end) infinite;
     }
 
+    .terminal-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: var(--linux-scroll-thumb, #33ff33) var(--linux-scroll-track, rgba(0, 0, 0, 0.45));
+    }
+
+    .terminal-scrollbar::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    .terminal-scrollbar::-webkit-scrollbar-track {
+      background: var(--linux-scroll-track, rgba(0, 0, 0, 0.45));
+      border-radius: 999px;
+    }
+
+    .terminal-scrollbar::-webkit-scrollbar-thumb {
+      background: var(--linux-scroll-thumb, #33ff33);
+      border: 2px solid var(--linux-scroll-track, rgba(0, 0, 0, 0.45));
+      border-radius: 999px;
+    }
+
+    .terminal-scrollbar::-webkit-scrollbar-thumb:hover {
+      filter: brightness(1.15);
+    }
+
     .crt-scanlines::after {
       content: " ";
       display: block;

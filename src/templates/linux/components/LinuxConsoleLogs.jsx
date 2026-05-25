@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 
 const LinuxConsoleLogs = ({ consoleLogs, logsEndRef, palette }) => (
-  <div className="p-4 sm:p-6 space-y-4 min-h-[500px]">
+  <div className="p-4 sm:p-6 space-y-4 flex-1 min-h-0 overflow-y-auto terminal-scrollbar">
     {consoleLogs.map((log, idx) => (
       <motion.div
         key={idx}

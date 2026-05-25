@@ -13,7 +13,7 @@ const renderTypedBanner = (lines, activeLineIdx) => (
     {lines.map((line, idx) => (
       <div key={`welcome-line-${idx}`} className="min-h-[14px]">
         {line}
-        {idx === activeLineIdx ? <span className="inline-block w-[8px] animate-pulse">_</span> : null}
+        {idx === activeLineIdx ? <span className="inline-block w-[8px] terminal-hard-caret">_</span> : null}
       </div>
     ))}
   </div>
@@ -28,6 +28,7 @@ const LinuxPortfolio = ({ data }) => {
   const [historyIdx, setHistoryIdx] = useState(-1);
   const [consoleLogs, setConsoleLogs] = useState([]);
   const [uptime, setUptime] = useState(0);
+  const [isBannerDone, setIsBannerDone] = useState(false);
 
   const inputRef = useRef(null);
   const logsEndRef = useRef(null);
@@ -73,6 +74,7 @@ const LinuxPortfolio = ({ data }) => {
 
       if (lineIdx >= lines.length) {
         pushBannerFrame();
+        setIsBannerDone(true);
         return;
       }
 
@@ -82,7 +84,7 @@ const LinuxPortfolio = ({ data }) => {
         typedLines[lineIdx] += activeLine[charIdx];
         charIdx += 1;
         pushBannerFrame();
-        timeoutId = setTimeout(typeNextChar, 28);
+        timeoutId = setTimeout(typeNextChar, 12);
         return;
       }
 
@@ -90,10 +92,10 @@ const LinuxPortfolio = ({ data }) => {
       charIdx = 0;
       if (lineIdx < lines.length) typedLines.push("");
       pushBannerFrame();
-      timeoutId = setTimeout(typeNextChar, 180);
+      timeoutId = setTimeout(typeNextChar, 70);
     };
 
-    timeoutId = setTimeout(typeNextChar, 180);
+    timeoutId = setTimeout(typeNextChar, 70);
     return () => {
       isCancelled = true;
       if (timeoutId) clearTimeout(timeoutId);
@@ -101,7 +103,13 @@ const LinuxPortfolio = ({ data }) => {
   }, []);
 
   useEffect(() => {
-    logsEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const logAnchor = logsEndRef.current;
+    const logsContainer = logAnchor?.parentElement;
+    if (!logsContainer) return;
+    logsContainer.scrollTo({
+      top: logsContainer.scrollHeight,
+      behavior: "smooth"
+    });
   }, [consoleLogs]);
 
   const handleCommand = (rawCommand) => {
@@ -199,34 +207,45 @@ const LinuxPortfolio = ({ data }) => {
     }
   };
 
-  const focusInput = () => inputRef.current?.focus();
+  const focusInput = () => {
+    if (!isBannerDone) return;
+    inputRef.current?.focus();
+  };
 
   return (
     <div
       onClick={focusInput}
-      className={`w-full min-h-screen ${palette.bg} ${palette.text} antialiased selection:bg-[#33ff33]/20 selection:text-white p-4 sm:p-6 font-mono text-sm leading-relaxed overflow-y-auto cursor-text select-text pb-16 transition-colors duration-500`}
+      className={`w-full h-screen ${palette.bg} ${palette.text} antialiased selection:bg-[#33ff33]/20 selection:text-white p-4 sm:p-6 font-mono text-sm leading-relaxed overflow-hidden cursor-text select-text transition-colors duration-500`}
+      style={{
+        "--linux-scroll-thumb": palette.inputColor,
+        "--linux-scroll-track": "rgba(0, 0, 0, 0.45)"
+      }}
     >
-      <div className="max-w-4xl mx-auto space-y-6">
-        <div className={`border ${palette.border} rounded-lg overflow-hidden shadow-2xl ${palette.cardBg} relative crt-screen crt-scanlines`}>
+      <div className="max-w-4xl mx-auto h-full flex flex-col gap-4">
+        <div className={`border ${palette.border} rounded-lg overflow-hidden shadow-2xl ${palette.cardBg} relative crt-screen crt-scanlines flex flex-col flex-1 min-h-0`}>
           <LinuxTerminalHeader palette={palette} />
           <LinuxConsoleLogs consoleLogs={consoleLogs} logsEndRef={logsEndRef} palette={palette} />
-          <LinuxSuggestionsBar
-            suggestions={suggestions}
-            palette={palette}
-            inputVal={inputVal}
-            setInputVal={setInputVal}
-            focusInput={focusInput}
-          />
-          <LinuxPromptInput
-            palette={palette}
-            inputRef={inputRef}
-            inputVal={inputVal}
-            setInputVal={setInputVal}
-            handleKeyDown={handleKeyDown}
-          />
+          {isBannerDone ? (
+            <>
+              <LinuxSuggestionsBar
+                suggestions={suggestions}
+                palette={palette}
+                inputVal={inputVal}
+                setInputVal={setInputVal}
+                focusInput={focusInput}
+              />
+              <LinuxPromptInput
+                palette={palette}
+                inputRef={inputRef}
+                inputVal={inputVal}
+                setInputVal={setInputVal}
+                handleKeyDown={handleKeyDown}
+              />
+            </>
+          ) : null}
         </div>
 
-        <div className="flex flex-wrap justify-between gap-4 text-[10px] text-neutral-500 select-none">
+        <div className="flex flex-wrap justify-between gap-4 text-[10px] text-neutral-500 select-none shrink-0">
           <p>HINT: Use Arrow keys for history, Tab for autocomplete</p>
           <p className="uppercase">SECURE PORTFOLIO SHELL // IP: 127.0.0.1</p>
         </div>
