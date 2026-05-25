@@ -113,7 +113,7 @@ export const TestimonialsBlock = ({ socialStage, testimonials }) => !socialStage
 
 export const CustomStagesBlock = ({ customStages }) => customStages.map((stage) => (
   <Section key={stage.id}>
-    <SectionHeading label="STORY" title={stage.title || "Custom Panel"} icon={Terminal} colorClass="bg-[#fde047]" />
+    <SectionHeading label={stage.title || "CUSTOM"} title={stage.title || "Custom Panel"} icon={Terminal} colorClass="bg-[#fde047]" />
     {stage.kind === "cards" ? <div className="space-y-4">{stage.cards.map((card, idx) => <Card key={`${stage.id}-${idx}`} className="flex flex-col justify-between min-h-[140px] group"><div className="space-y-2">{card.image && <div className="w-full h-36 rounded-xl border-4 border-black overflow-hidden bg-white mb-3 shadow-[3px_3px_0px_#000] relative"><img src={card.image} alt={card.title} className="w-full h-full object-cover" /></div>}<div className="flex justify-between items-start"><h4 className="font-serif-lux text-2xl text-black tracking-wide">{card.title}</h4>{card.link && <a href={card.link} target="_blank" rel="noreferrer" className="text-black hover:scale-110 transition-transform"><ArrowUpRight className="w-4 h-4" /></a>}</div>{card.subtitle && <p className="text-[10px] font-accent-lux text-neutral-500 font-bold uppercase">{card.subtitle}</p>}{card.description && <p className="text-xs text-neutral-600 font-sans-lux leading-relaxed font-semibold">{card.description}</p>}</div></Card>)}</div> : <p className="text-sm leading-relaxed text-black font-sans-lux font-semibold bg-neutral-100 border-4 border-black p-5 rounded-2xl shadow-[4px_4px_0px_#000] rotate-0.5">{stage.paragraph}</p>}
   </Section>
 ));
