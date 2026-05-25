@@ -92,7 +92,7 @@ const Obsidian = ({ data }) => {
       initial="hidden"
       animate="show"
       variants={PAGE_STAGGER}
-      className="w-full min-h-screen bg-[#040407] text-neutral-300 antialiased selection:bg-[#dfb76c]/30 selection:text-white relative overflow-hidden font-sans-lux pb-8 lg:cursor-none"
+      className="w-full h-screen overflow-y-auto overflow-x-hidden obsidian-scrollbar bg-[#040407] text-neutral-300 antialiased selection:bg-[#dfb76c]/30 selection:text-white relative font-sans-lux pb-8 lg:cursor-none"
     >
       <ObsidianGlobalStyles />
       <ObsidianCursor

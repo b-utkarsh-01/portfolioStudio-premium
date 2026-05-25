@@ -30,6 +30,26 @@ export const ObsidianGlobalStyles = () => (
     }
     .card-glow-hover:hover::before { left: 125%; }
     .card-glow-hover:hover { box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(223, 183, 108, 0.08), inset 0 0 15px rgba(223, 183, 108, 0.03); }
+
+    .obsidian-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(223, 183, 108, 0.75) rgba(31, 24, 37, 0.9);
+    }
+    .obsidian-scrollbar::-webkit-scrollbar { width: 10px; height: 10px; }
+    .obsidian-scrollbar::-webkit-scrollbar-track {
+      background: rgba(31, 24, 37, 0.9);
+      border-radius: 999px;
+      border: 1px solid rgba(223, 183, 108, 0.14);
+    }
+    .obsidian-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, rgba(223, 183, 108, 0.95), rgba(164, 119, 52, 0.95));
+      border-radius: 999px;
+      border: 2px solid rgba(31, 24, 37, 0.9);
+    }
+    .obsidian-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, rgba(241, 207, 147, 0.98), rgba(190, 139, 64, 0.98));
+    }
+
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   `}</style>

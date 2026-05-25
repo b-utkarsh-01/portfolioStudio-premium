@@ -123,6 +123,45 @@ export const MatrixRain = () => {
   return <canvas id="matrix-canvas" className="absolute inset-0 w-full h-full object-cover z-0 opacity-15 pointer-events-none" />;
 };
 
+export const TelemetrySignal = () => {
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    let animId;
+    const tick = () => {
+      setPhase((prev) => (prev + 0.15) % (Math.PI * 2));
+      animId = requestAnimationFrame(tick);
+    };
+    animId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  const points = [];
+  const width = 180;
+  const height = 30;
+  for (let x = 0; x <= width; x += 3) {
+    const y = height / 2 + Math.sin(x * 0.08 + phase) * 8 + (Math.random() - 0.5) * 1.5;
+    points.push(`${x},${y}`);
+  }
+  const pathData = `M ${points.join(" L ")}`;
+
+  return (
+    <div className="border border-[#00f0ff]/15 bg-black/60 p-2 rounded-lg flex flex-col justify-between mt-3 h-[60px] relative overflow-hidden">
+      <span className="text-[7px] text-neutral-500 uppercase tracking-widest absolute top-1.5 left-2">SIGNAL_STREAM // RX_OSC</span>
+      <svg className="w-full h-full pt-3 animate-pulse" viewBox={`0 0 ${width} ${height}`}>
+        <path
+          d={pathData}
+          fill="none"
+          stroke="#ff00ff"
+          strokeWidth="1"
+          style={{ filter: "drop-shadow(0 0 2px #ff00ff)" }}
+        />
+        <line x1="0" y1={height / 2} x2={width} y2={height / 2} stroke="rgba(0, 240, 255, 0.1)" strokeDasharray="3 3" />
+      </svg>
+    </div>
+  );
+};
+
 export const TelemetryWidgets = () => {
   const [cpu, setCpu] = useState(42);
   const [mem, setMem] = useState(64);
@@ -180,6 +219,8 @@ export const TelemetryWidgets = () => {
           SECURE_SSL
         </div>
       </div>
+
+      <TelemetrySignal />
     </div>
   );
 };
@@ -233,7 +274,7 @@ export const BiosBootScreen = ({ onComplete }) => {
   }, [onComplete]);
 
   const barWidth = Math.floor(progress / 5);
-  const loadingBar = "¦".repeat(barWidth) + "¦".repeat(20 - barWidth);
+  const loadingBar = "â–ˆ".repeat(barWidth) + "â–‘".repeat(20 - barWidth);
 
   return (
     <div onClick={onComplete} className="fixed inset-0 bg-[#020203] z-[99999] flex flex-col justify-between p-6 sm:p-12 font-mono text-[#00f0ff] cursor-pointer selection:bg-none">

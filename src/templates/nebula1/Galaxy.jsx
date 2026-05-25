@@ -37,7 +37,7 @@ uniform bool uTransparent;
 
 varying vec2 vUv;
 
-#define NUM_LAYER 4.0
+#define NUM_LAYER 3.0
 #define STAR_COLOR_CUTOFF 0.2
 #define MAT45 mat2(0.7071, -0.7071, 0.7071, 0.7071)
 #define PERIOD 3.0
@@ -207,7 +207,8 @@ export default function Galaxy({
     try {
       renderer = new Renderer({
         alpha: transparent,
-        premultipliedAlpha: false
+        premultipliedAlpha: false,
+        powerPreference: 'high-performance'
       });
       gl = renderer.gl;
       setWebglFailed(false);
@@ -227,9 +228,11 @@ export default function Galaxy({
 
     let program;
 
+    let cachedRect = null;
     function resize() {
       const scale = 1;
       renderer.setSize(ctn.offsetWidth * scale, ctn.offsetHeight * scale);
+      cachedRect = ctn.getBoundingClientRect();
       if (program) {
         program.uniforms.uResolution.value = new Color(gl.canvas.width, gl.canvas.height, gl.canvas.width / gl.canvas.height);
       }
@@ -296,12 +299,27 @@ export default function Galaxy({
     animateId = requestAnimationFrame(update);
     ctn.appendChild(gl.canvas);
 
-    function handleMouseMove(e) {
-      const rect = ctn.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
-      targetMousePos.current = { x, y };
+    let mouseRaf = null;
+    let pendingMouseEvent = null;
+
+    const applyMousePosition = () => {
+      mouseRaf = null;
+      if (!pendingMouseEvent) return;
+      const rect = cachedRect || ctn.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const rawX = (pendingMouseEvent.clientX - rect.left) / rect.width;
+      const rawY = 1.0 - (pendingMouseEvent.clientY - rect.top) / rect.height;
+      const x = Math.max(0, Math.min(1, rawX));
+      const y = Math.max(0, Math.min(1, rawY));
+      targetMousePos.current.x = x;
+      targetMousePos.current.y = y;
       targetMouseActive.current = 1.0;
+    };
+
+    function handleMouseMove(e) {
+      pendingMouseEvent = e;
+      if (mouseRaf !== null) return;
+      mouseRaf = requestAnimationFrame(applyMousePosition);
     }
 
     function handleMouseLeave() {
@@ -320,6 +338,7 @@ export default function Galaxy({
 
     return () => {
       cancelAnimationFrame(animateId);
+      if (mouseRaf !== null) cancelAnimationFrame(mouseRaf);
       window.removeEventListener('resize', resize);
       if (mouseInteraction) {
         if (trackGlobalMouse) {

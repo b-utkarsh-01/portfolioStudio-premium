@@ -45,6 +45,19 @@ export const CYBER_GLOBAL_STYLES = `
   }
 
   .text-glow-cyan { text-shadow: 0 0 10px rgba(0, 240, 255, 0.5); }
+  .cyber-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 240, 255, 0.95) rgba(8, 8, 14, 0.95);
+  }
+  .cyber-scrollbar::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(0, 240, 255, 1) 0%, rgba(255, 0, 255, 0.95) 100%);
+    border-radius: 999px;
+    border: 2px solid rgba(8, 8, 14, 0.95);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.4);
+  }
+  .cyber-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(128, 244, 255, 1) 0%, rgba(255, 102, 255, 1) 100%);
+  }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -84,6 +97,47 @@ export const CYBER_GLOBAL_STYLES = `
     60% { clip-path: inset(60% 0 8% 0); transform: skewX(8deg) translateX(4px); }
     80% { clip-path: inset(20% 0 45% 0); transform: skewX(-1deg) translateX(0px); }
     100% { clip-path: inset(0 0 0 0); transform: none; }
+  }
+
+  @keyframes scanline-sweep {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(400px); opacity: 0; }
+  }
+  .card-scanline-laser {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00f0ff, #ff00ff, #00f0ff, transparent);
+    box-shadow: 0 0 8px #00f0ff, 0 0 12px #ff00ff;
+    opacity: 0;
+    pointer-events: none;
+  }
+  .group\/sec:hover .card-scanline-laser,
+  .card-glow-hover:hover .card-scanline-laser {
+    animation: scanline-sweep 2.5s linear infinite;
+  }
+
+  @keyframes global-laser-sweep {
+    0% { transform: translateY(-10vh); opacity: 0; }
+    5% { opacity: 0.35; }
+    95% { opacity: 0.35; }
+    100% { transform: translateY(110vh); opacity: 0; }
+  }
+  .global-scanline-laser {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #00f0ff, #ff00ff, #00f0ff, transparent);
+    box-shadow: 0 0 10px #00f0ff, 0 0 16px #ff00ff;
+    z-index: 9999;
+    pointer-events: none;
+    animation: global-laser-sweep 12s linear infinite;
   }
 `;
 
@@ -143,13 +197,14 @@ export const CyberClickParticles = ({ bits }) => (
 export const CyberChrome = () => (
   <>
     <div className="scanlines absolute inset-0 w-full h-full pointer-events-none z-50" />
+    <div className="global-scanline-laser" />
     <MatrixRain />
     <div className="fixed inset-0 pointer-events-none z-0 opacity-25 cyber-grid-bg cyber-grid-spotlight" />
   </>
 );
 
 export const HeroSection = ({ data, roleTitles, experiences, education, projects, topSkills }) => (
-  <Section className="md:col-span-8 flex flex-col justify-between min-h-[380px] bg-black/30">
+  <Section className="col-span-1 md:col-span-8 flex flex-col justify-between min-h-[380px] bg-black/30" sysRef="SYS_HERO_NODE">
     <div className="space-y-6">
       <div className="flex items-center gap-2 border border-[#00f0ff]/30 w-fit px-3 py-1 rounded bg-[#00f0ff]/5 select-none">
         <Terminal className="w-3.5 h-3.5 text-[#ff00ff]" />
@@ -196,7 +251,7 @@ export const HeroSection = ({ data, roleTitles, experiences, education, projects
 );
 
 export const ContactSection = ({ contactLinks }) => (
-  <Section className="md:col-span-4 flex flex-col justify-between min-h-[380px] bg-black/30">
+  <Section className="col-span-1 md:col-span-4 flex flex-col justify-between min-h-[380px] bg-black/30" sysRef="SYS_PORT_MGMT">
     <div>
       <SectionHeading label="CONNECT" title="GET IN TOUCH" icon={Mail} />
       <div className="space-y-3 mt-4">
@@ -242,220 +297,278 @@ export const ContactSection = ({ contactLinks }) => (
   </Section>
 );
 
-export const LeftColumnSections = ({ data, profileStage, socialStage, projects, services, testimonials, customStages }) => (
-  <div className="md:col-span-8 space-y-6">
-    {profileStage.enabled ? (
-      <Section>
-        <SectionHeading label="BIO NODE" title={profileStage.title} icon={User} />
-        <div className="space-y-4 max-w-3xl font-sans-lux">
-          <p className="text-lg font-light text-[#00f0ff] leading-relaxed">IDENT: {data.profile?.name || "Alex"}.</p>
-          <p className="text-sm font-light leading-relaxed text-neutral-400">
-            {data.profile?.summary || "Developer specialized in high-performance web systems and glitch responsive layouts."}
-          </p>
-          <div className="flex flex-wrap gap-2 pt-2">
-            <span className="px-2.5 py-0.5 rounded bg-[#00f0ff]/10 border border-[#00f0ff]/20 text-[9px] font-semibold text-[#00f0ff] font-accent-lux">CYBER DESIGN</span>
-            <span className="px-2.5 py-0.5 rounded bg-[#ff00ff]/10 border border-[#ff00ff]/20 text-[9px] font-semibold text-[#ff00ff] font-accent-lux">MONOSPACED LOGIC</span>
-          </div>
+export const BioSection = ({ data, profileStage }) => {
+  if (!profileStage.enabled) return null;
+  return (
+    <Section className="col-span-1 md:col-span-7" sysRef="SYS_BIO_DATA">
+      <SectionHeading label="BIO NODE" title={profileStage.title} icon={User} />
+      <div className="space-y-4 max-w-3xl font-sans-lux">
+        <p className="text-lg font-light text-[#00f0ff] leading-relaxed">IDENT: {data.profile?.name || "Alex"}.</p>
+        <p className="text-sm font-light leading-relaxed text-neutral-400">
+          {data.profile?.summary || "Developer specialized in high-performance web systems and glitch responsive layouts."}
+        </p>
+        <div className="flex flex-wrap gap-2 pt-2">
+          <span className="px-2.5 py-0.5 rounded bg-[#00f0ff]/10 border border-[#00f0ff]/20 text-[9px] font-semibold text-[#00f0ff] font-accent-lux">CYBER DESIGN</span>
+          <span className="px-2.5 py-0.5 rounded bg-[#ff00ff]/10 border border-[#ff00ff]/20 text-[9px] font-semibold text-[#ff00ff] font-accent-lux">MONOSPACED LOGIC</span>
         </div>
-      </Section>
-    ) : null}
+      </div>
+    </Section>
+  );
+};
 
-    {projects.length > 0 ? (
-      <Section>
-        <div className="flex justify-between items-center border-b border-[#00f0ff]/10 pb-4 mb-6">
-          <div className="flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-[#00f0ff]" />
-            <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#00f0ff] font-accent-lux">INDEX TRACES</span>
-          </div>
-          <h2 className="text-3xl font-light tracking-tight text-white font-serif-lux uppercase"><DecryptedHeader text="Active Creations" /></h2>
+export const SkillsSection = ({ skillsStage, topSkills }) => {
+  if (!skillsStage.enabled) return null;
+  return (
+    <Section className="col-span-1 md:col-span-5" sysRef="SYS_SKILL_EXP">
+      <SectionHeading label="EXPERTISE" title={skillsStage.title} icon={Cpu} />
+      {topSkills.length ? (
+        <div className="flex flex-wrap gap-2 pt-2">
+          {topSkills.map((skill, idx) => (
+            <motion.span
+              key={`${skill}-${idx}`}
+              whileHover={{ y: -2, scale: 1.05, borderColor: "#ff00ff", color: "#ffffff" }}
+              transition={{ duration: 0.15 }}
+              className="cursor-default bg-black/75 border border-[#00f0ff]/30 px-3 py-1.5 text-[10px] font-mono text-[#00f0ff] uppercase tracking-wider relative transition-colors shadow-[0_0_8px_rgba(0,240,255,0.05)] hover:shadow-[0_0_12px_rgba(255,0,255,0.2)]"
+              style={{
+                clipPath: "polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px))",
+              }}
+            >
+              <span className="text-[#ff00ff] mr-1.5">//</span>
+              {skill}
+            </motion.span>
+          ))}
         </div>
+      ) : (
+        <EmptyState message="No parameters configured." />
+      )}
+    </Section>
+  );
+};
 
-        <motion.div variants={CARD_STAGGER} initial="hidden" animate="show" className="grid gap-4 sm:grid-cols-2">
-          {projects.map((item, idx) => {
-            const techList = item.tech ? item.tech.split(",").map((t) => t.trim()) : [];
-            return (
-              <Card key={`${item.name}-${idx}`} className="flex flex-col justify-between min-h-[180px] group">
-                <div className="space-y-3">
-                  {item.image && (
-                    <div className="w-full h-32 rounded-lg overflow-hidden border border-[#00f0ff]/20 mb-3 relative bg-black glitch-image-hover">
-                      <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1.02]" />
-                      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.4)_50%)] bg-[size:100%_4px] pointer-events-none opacity-40" />
-                      <div className="absolute inset-0 bg-[#00f0ff]/10 pointer-events-none" />
-                    </div>
-                  )}
-                  <div className="flex justify-between items-start">
-                    <span className="font-accent-lux text-[9px] text-[#ff00ff] font-bold tracking-wider">INDEX // 0x0{idx + 1}</span>
-                    <span className="text-neutral-600 transition-colors duration-300 group-hover:text-[#ff00ff]"><ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" /></span>
-                  </div>
-                  <h3 className="font-serif-lux text-lg text-white font-medium group-hover:text-[#00f0ff] transition-colors leading-tight">{item.name}</h3>
-                  <p className="text-xs text-neutral-400 font-sans-lux leading-relaxed line-clamp-3 font-light">{item.description}</p>
-                </div>
-                {techList.length > 0 && (
-                  <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-[#00f0ff]/10">
-                    {techList.map((techItem, tIdx) => (
-                      <span key={tIdx} className="px-2 py-0.5 rounded bg-black border border-[#00f0ff]/20 text-[9px] font-medium text-[#00f0ff] font-sans-lux">{techItem}</span>
-                    ))}
+export const ProjectsSection = ({ projects }) => {
+  if (!projects || projects.length === 0) return null;
+  return (
+    <Section className="col-span-1 md:col-span-12" sysRef="SYS_PRJ_LOGS">
+      <div className="flex justify-between items-center border-b border-[#00f0ff]/10 pb-4 mb-6">
+        <div className="flex items-center gap-2">
+          <Terminal className="w-4 h-4 text-[#00f0ff]" />
+          <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[#00f0ff] font-accent-lux">INDEX TRACES</span>
+        </div>
+        <h2 className="text-3xl font-light tracking-tight text-white font-serif-lux uppercase">
+          <DecryptedHeader text="Active Creations" />
+        </h2>
+      </div>
+
+      <motion.div variants={CARD_STAGGER} initial="hidden" animate="show" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {projects.map((item, idx) => {
+          const techList = item.tech ? item.tech.split(",").map((t) => t.trim()) : [];
+          return (
+            <Card key={`${item.name}-${idx}`} className="flex flex-col justify-between min-h-[180px] group">
+              <div className="space-y-3">
+                {item.image && (
+                  <div className="w-full h-32 rounded-lg overflow-hidden border border-[#00f0ff]/20 mb-3 relative bg-black glitch-image-hover">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-75 group-hover:opacity-100 transition-all duration-300 group-hover:scale-[1.02]" />
+                    <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.4)_50%)] bg-[size:100%_4px] pointer-events-none opacity-40" />
+                    <div className="absolute inset-0 bg-[#00f0ff]/10 pointer-events-none" />
                   </div>
                 )}
-              </Card>
-            );
-          })}
-        </motion.div>
-      </Section>
-    ) : null}
-
-    {socialStage.enabled && services.length > 0 ? (
-      <Section>
-        <SectionHeading label="CAPABILITIES" title="CORE UTILITIES" icon={Layers} />
-        <motion.div variants={CARD_STAGGER} initial="hidden" animate="show" className="grid gap-4 sm:grid-cols-2">
-          {services.map((item, idx) => (
-            <Card key={`${item.name}-${idx}`} className="flex flex-col justify-between min-h-[140px]">
-              <div>
-                <div className="flex h-7 w-7 items-center justify-center rounded border border-[#00f0ff]/20 bg-black mb-3"><Zap className="w-3.5 h-3.5 text-[#ff00ff]" /></div>
-                <h4 className="font-serif-lux text-base text-white font-medium">{item.name}</h4>
-                {item.description && <p className="text-xs text-neutral-400 font-sans-lux leading-relaxed mt-2 font-light">{item.description}</p>}
-              </div>
-            </Card>
-          ))}
-        </motion.div>
-      </Section>
-    ) : null}
-
-    {socialStage.enabled && testimonials.length > 0 ? (
-      <Section>
-        <SectionHeading label="SIGNALS" title="CLIENT TRANSCRIPTS" icon={Quote} />
-        <motion.div variants={CARD_STAGGER} initial="hidden" animate="show" className="space-y-4">
-          {testimonials.map((item, idx) => (
-            <Card key={`${item.name}-${idx}`} className="relative p-6 overflow-hidden">
-              <Quote className="absolute -top-3 -left-2 w-16 h-16 text-white/[0.02] rotate-12 pointer-events-none" />
-              <blockquote className="space-y-4">
-                <p className="text-sm italic font-light font-serif-lux leading-relaxed text-neutral-300">&ldquo;{item.quote}&rdquo;</p>
-                <footer className="flex items-center gap-3 border-t border-[#00f0ff]/10 pt-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-black border border-[#00f0ff]/20 text-[11px] font-bold text-[#ff00ff] font-accent-lux">
-                    {(item.name || "?")[0].toUpperCase()}
-                  </div>
-                  <div>
-                    <cite className="not-italic text-xs font-semibold text-white font-accent-lux">{item.name}</cite>
-                    <p className="text-[10px] text-neutral-500 font-sans-lux">{item.role}</p>
-                  </div>
-                </footer>
-              </blockquote>
-            </Card>
-          ))}
-        </motion.div>
-      </Section>
-    ) : null}
-
-    {customStages.map((stage) => (
-      <Section key={stage.id}>
-        <SectionHeading label="STAGE_LOG" title={stage.title || "Custom Node"} icon={Terminal} />
-        {stage.kind === "cards" ? (
-          <div className="space-y-4">
-            {stage.cards.map((card, idx) => (
-              <Card key={`${stage.id}-${idx}`} className="flex flex-col justify-between min-h-[140px] group">
-                <div className="space-y-2">
-                  {card.image && (
-                    <div className="w-full h-32 rounded-lg overflow-hidden border border-[#00f0ff]/20 mb-3 relative bg-black glitch-image-hover">
-                      <img src={card.image} alt={card.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
-                      <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.4)_50%)] bg-[size:100%_4px] pointer-events-none opacity-40" />
-                    </div>
-                  )}
-                  <div className="flex justify-between items-start">
-                    <h4 className="font-serif-lux text-base text-white font-medium group-hover:text-[#00f0ff] transition-colors">{card.title}</h4>
-                    {card.link && (
-                      <a href={card.link} target="_blank" rel="noreferrer" className="text-neutral-600 transition-colors group-hover:text-[#00f0ff]">
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </a>
-                    )}
-                  </div>
-                  {card.subtitle && <p className="text-[10px] font-accent-lux text-[#ff00ff] font-semibold">{card.subtitle}</p>}
-                  {card.description && <p className="text-xs text-neutral-500 font-sans-lux leading-relaxed">{card.description}</p>}
+                <div className="flex justify-between items-start">
+                  <span className="font-accent-lux text-[9px] text-[#ff00ff] font-bold tracking-wider">INDEX // 0x0{idx + 1}</span>
+                  <span className="text-neutral-600 transition-colors duration-300 group-hover:text-[#ff00ff]">
+                    <ArrowUpRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
                 </div>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <p className="text-sm leading-relaxed text-neutral-400 font-sans-lux font-light bg-black/40 border border-[#00f0ff]/10 p-5 rounded-2xl">{stage.paragraph}</p>
-        )}
-      </Section>
-    ))}
-  </div>
-);
-
-export const RightColumnSections = ({ skillsStage, workStage, publishStage, topSkills, timelineItems, certifications }) => (
-  <div className="md:col-span-4 space-y-6">
-    {skillsStage.enabled ? (
-      <Section>
-        <SectionHeading label="EXPERTISE" title={skillsStage.title} icon={Cpu} />
-        {topSkills.length ? (
-          <div className="flex flex-wrap gap-2">
-            {topSkills.map((skill, idx) => (
-              <motion.span
-                key={`${skill}-${idx}`}
-                whileHover={{ y: -2, scale: 1.05 }}
-                transition={{ duration: 0.15 }}
-                className="cursor-default rounded border border-[#00f0ff]/20 bg-black/50 px-3 py-1.5 text-xs font-mono text-neutral-300 transition-colors hover:border-[#ff00ff]/40 hover:bg-[#ff00ff]/5 hover:text-white font-sans-lux shadow-sm"
-              >
-                {skill}
-              </motion.span>
-            ))}
-          </div>
-        ) : (
-          <EmptyState message="No parameters configured." />
-        )}
-      </Section>
-    ) : null}
-
-    {workStage.enabled && timelineItems.length > 0 ? (
-      <Section>
-        <SectionHeading label="INDEX TRACE" title={workStage.title} icon={Briefcase} />
-        <div className="space-y-6 ml-2">
-          {timelineItems.map((item, idx) => {
-            const isLast = idx === timelineItems.length - 1;
-            return (
-              <div key={idx} className={`relative pl-6 border-l border-[#00f0ff]/20 pb-6 ${isLast ? "pb-0 border-transparent" : ""} group`}>
-                <div className="absolute -left-[5px] top-2.5 w-2 h-2 bg-black border border-[#00f0ff] group-hover:bg-[#ff00ff] group-hover:border-[#ff00ff] group-hover:shadow-[0_0_8px_#ff00ff] transition-all duration-300 rotate-45" />
-                <div className="space-y-1">
-                  <div className="flex flex-col">
-                    <span className="text-[9px] text-[#ff00ff] font-bold font-accent-lux uppercase tracking-wider">{item.date}</span>
-                    <h3 className="font-serif-lux text-sm text-white font-medium leading-snug group-hover:text-[#00f0ff] transition-colors">{item.title}</h3>
-                  </div>
-                  <p className="text-[10px] font-bold text-neutral-400 font-accent-lux">{item.subtitle}</p>
-                  {item.description && <p className="text-[11px] text-neutral-500 font-sans-lux leading-relaxed pt-1 font-light">{item.description}</p>}
+                <h3 className="font-serif-lux text-lg text-white font-medium group-hover:text-[#00f0ff] transition-colors leading-tight">{item.name}</h3>
+                <p className="text-xs text-neutral-400 font-sans-lux leading-relaxed line-clamp-3 font-light">{item.description}</p>
+              </div>
+              {techList.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-4 pt-3 border-t border-[#00f0ff]/10">
+                  {techList.map((techItem, tIdx) => (
+                    <span key={tIdx} className="px-2 py-0.5 rounded bg-black border border-[#00f0ff]/20 text-[9px] font-medium text-[#00f0ff] font-sans-lux">
+                      {techItem}
+                    </span>
+                  ))}
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </Section>
-    ) : null}
-
-    {publishStage.enabled && certifications.length > 0 ? (
-      <Section>
-        <SectionHeading label="REGISTRY" title={publishStage.title} icon={Award} />
-        <div className="space-y-3">
-          {certifications.map((item, idx) => (
-            <div key={`${item.name}-${idx}`} className="p-4 rounded-xl bg-black/30 border border-[#00f0ff]/15 hover:border-[#ff00ff]/35 transition-all duration-300 flex justify-between items-center group">
-              <div className="space-y-1">
-                <h4 className="font-serif-lux text-sm text-white font-medium group-hover:text-[#00f0ff] transition-colors">{item.name}</h4>
-                <p className="text-[10px] font-accent-lux text-neutral-500 font-semibold">{item.provider}</p>
-              </div>
-              {item.link && (
-                <a href={item.link} target="_blank" rel="noreferrer" className="font-accent-lux text-[9px] font-bold text-[#ff00ff] hover:text-[#00f0ff] inline-flex items-center gap-1 uppercase tracking-wider">
-                  Verify ?
-                </a>
               )}
+            </Card>
+          );
+        })}
+      </motion.div>
+    </Section>
+  );
+};
+
+export const TimelineSection = ({ workStage, experiences, education }) => {
+  if (!workStage.enabled || (experiences.length === 0 && education.length === 0)) return null;
+  return (
+    <Section className="col-span-1 md:col-span-12" sysRef="SYS_TIME_TRACE">
+      <div className="grid gap-8 md:grid-cols-2">
+        {experiences.length > 0 && (
+          <div>
+            <SectionHeading label="WORK HISTORY" title="INDEX TRACE // EXP" icon={Briefcase} />
+            <div className="space-y-6 ml-2">
+              {experiences.map((item, idx) => {
+                const isLast = idx === experiences.length - 1;
+                return (
+                  <div key={idx} className={`relative pl-6 border-l border-[#00f0ff]/20 pb-6 ${isLast ? "pb-0 border-transparent" : ""} group`}>
+                    <div className="absolute -left-[5px] top-2.5 w-2 h-2 bg-black border border-[#00f0ff] group-hover:bg-[#ff00ff] group-hover:border-[#ff00ff] group-hover:shadow-[0_0_8px_#ff00ff] transition-all duration-300 rotate-45" />
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-[#ff00ff] font-bold font-accent-lux uppercase tracking-wider">{item.period}</span>
+                      <h3 className="font-serif-lux text-sm text-white font-medium leading-snug group-hover:text-[#00f0ff] transition-colors">{item.title}</h3>
+                      <p className="text-[10px] font-bold text-neutral-400 font-accent-lux">{item.company}</p>
+                      {item.description && <p className="text-[11px] text-neutral-500 font-sans-lux leading-relaxed pt-1 font-light">{item.description}</p>}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
-          ))}
-        </div>
-      </Section>
-    ) : null}
-  </div>
-);
+          </div>
+        )}
+
+        {education.length > 0 && (
+          <div>
+            <SectionHeading label="ACADEMIC RECORDS" title="INDEX TRACE // EDU" icon={Award} />
+            <div className="space-y-6 ml-2">
+              {education.map((item, idx) => {
+                const isLast = idx === education.length - 1;
+                const first = item.items?.[0] || {};
+                return (
+                  <div key={idx} className={`relative pl-6 border-l border-[#00f0ff]/20 pb-6 ${isLast ? "pb-0 border-transparent" : ""} group`}>
+                    <div className="absolute -left-[5px] top-2.5 w-2 h-2 bg-black border border-[#00f0ff] group-hover:bg-[#ff00ff] group-hover:border-[#ff00ff] group-hover:shadow-[0_0_8px_#ff00ff] transition-all duration-300 rotate-45" />
+                    <div className="space-y-1">
+                      <span className="text-[9px] text-[#ff00ff] font-bold font-accent-lux uppercase tracking-wider">{item.subtitle}</span>
+                      <h3 className="font-serif-lux text-sm text-white font-medium leading-snug group-hover:text-[#00f0ff] transition-colors">{first.degree || "Degree"}</h3>
+                      <p className="text-[10px] font-bold text-neutral-400 font-accent-lux">{first.institute || "Institute"}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </Section>
+  );
+};
+
+export const ServicesSection = ({ socialStage, services }) => {
+  if (!socialStage.enabled || !services || services.length === 0) return null;
+  return (
+    <Section className="col-span-1 md:col-span-12" sysRef="SYS_SVC_CAPS">
+      <SectionHeading label="CAPABILITIES" title="CORE UTILITIES" icon={Layers} />
+      <motion.div variants={CARD_STAGGER} initial="hidden" animate="show" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((item, idx) => (
+          <Card key={`${item.name}-${idx}`} className="flex flex-col justify-between min-h-[140px]">
+            <div>
+              <div className="flex h-7 w-7 items-center justify-center rounded border border-[#00f0ff]/20 bg-black mb-3">
+                <Zap className="w-3.5 h-3.5 text-[#ff00ff]" />
+              </div>
+              <h4 className="font-serif-lux text-base text-white font-medium">{item.name}</h4>
+              {item.description && <p className="text-xs text-neutral-400 font-sans-lux leading-relaxed mt-2 font-light">{item.description}</p>}
+            </div>
+          </Card>
+        ))}
+      </motion.div>
+    </Section>
+  );
+};
+
+export const CredentialsSection = ({ publishStage, certifications }) => {
+  if (!publishStage.enabled || !certifications || certifications.length === 0) return null;
+  return (
+    <Section className="col-span-1 md:col-span-6" sysRef="SYS_REG_CRED">
+      <SectionHeading label="REGISTRY" title={publishStage.title} icon={Award} />
+      <div className="space-y-3">
+        {certifications.map((item, idx) => (
+          <div key={`${item.name}-${idx}`} className="p-4 rounded-xl bg-black/30 border border-[#00f0ff]/15 hover:border-[#ff00ff]/35 transition-all duration-300 flex justify-between items-center group">
+            <div className="space-y-1">
+              <h4 className="font-serif-lux text-sm text-white font-medium group-hover:text-[#00f0ff] transition-colors">{item.name}</h4>
+              <p className="text-[10px] font-accent-lux text-neutral-500 font-semibold">{item.provider}</p>
+            </div>
+            {item.link && (
+              <a href={item.link} target="_blank" rel="noreferrer" className="font-accent-lux text-[9px] font-bold text-[#ff00ff] hover:text-[#00f0ff] inline-flex items-center gap-1 uppercase tracking-wider">
+                Verify ↗
+              </a>
+            )}
+          </div>
+        ))}
+      </div>
+    </Section>
+  );
+};
+
+export const TestimonialsSection = ({ socialStage, testimonials }) => {
+  if (!socialStage.enabled || !testimonials || testimonials.length === 0) return null;
+  return (
+    <Section className="col-span-1 md:col-span-6" sysRef="SYS_RX_TRANS">
+      <SectionHeading label="SIGNALS" title="CLIENT TRANSCRIPTS" icon={Quote} />
+      <motion.div variants={CARD_STAGGER} initial="hidden" animate="show" className="space-y-4">
+        {testimonials.map((item, idx) => (
+          <Card key={`${item.name}-${idx}`} className="relative p-6 overflow-hidden">
+            <Quote className="absolute -top-3 -left-2 w-16 h-16 text-white/[0.02] rotate-12 pointer-events-none" />
+            <blockquote className="space-y-4">
+              <p className="text-sm italic font-light font-serif-lux leading-relaxed text-neutral-300">&ldquo;{item.quote}&rdquo;</p>
+              <footer className="flex items-center gap-3 border-t border-[#00f0ff]/10 pt-3">
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-black border border-[#00f0ff]/20 text-[11px] font-bold text-[#ff00ff] font-accent-lux">
+                  {(item.name || "?")[0].toUpperCase()}
+                </div>
+                <div>
+                  <cite className="not-italic text-xs font-semibold text-white font-accent-lux">{item.name}</cite>
+                  <p className="text-[10px] text-neutral-500 font-sans-lux">{item.role}</p>
+                </div>
+              </footer>
+            </blockquote>
+          </Card>
+        ))}
+      </motion.div>
+    </Section>
+  );
+};
+
+export const CustomStagesSection = ({ customStages }) => {
+  if (!customStages || customStages.length === 0) return null;
+  return (
+    <>
+      {customStages.map((stage) => (
+        <Section key={stage.id} className="col-span-1 md:col-span-12" sysRef={`SYS_NODE_${(stage.id || 'CUST').substring(0, 4).toUpperCase()}`}>
+          <SectionHeading label="STAGE_LOG" title={stage.title || "Custom Node"} icon={Terminal} />
+          {stage.kind === "cards" ? (
+            <div className="grid gap-4 sm:grid-cols-2">
+              {stage.cards.map((card, idx) => (
+                <Card key={`${stage.id}-${idx}`} className="flex flex-col justify-between min-h-[140px] group">
+                  <div className="space-y-2">
+                    {card.image && (
+                      <div className="w-full h-32 rounded-lg overflow-hidden border border-[#00f0ff]/20 mb-3 relative bg-black glitch-image-hover">
+                        <img src={card.image} alt={card.title} className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.4)_50%)] bg-[size:100%_4px] pointer-events-none opacity-40" />
+                      </div>
+                    )}
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-serif-lux text-base text-white font-medium group-hover:text-[#00f0ff] transition-colors">{card.title}</h4>
+                      {card.link && (
+                        <a href={card.link} target="_blank" rel="noreferrer" className="text-neutral-600 transition-colors group-hover:text-[#00f0ff]">
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </a>
+                      )}
+                    </div>
+                    {card.subtitle && <p className="text-[10px] font-accent-lux text-[#ff00ff] font-semibold">{card.subtitle}</p>}
+                    {card.description && <p className="text-xs text-neutral-500 font-sans-lux leading-relaxed">{card.description}</p>}
+                  </div>
+                </Card>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm leading-relaxed text-neutral-400 font-sans-lux font-light bg-black/40 border border-[#00f0ff]/10 p-5 rounded-2xl">{stage.paragraph}</p>
+          )}
+        </Section>
+      ))}
+    </>
+  );
+};
 
 export const CyberFooter = ({ name }) => (
   <footer className="flex flex-col sm:flex-row justify-between items-center gap-4 text-[9px] font-accent-lux text-neutral-500 py-4 mt-8 border-t border-[#00f0ff]/10">
-    <p>� {new Date().getFullYear()} {name || "Portfolio Builder"}. All rights reserved.</p>
+    <p>© {new Date().getFullYear()} {name || "Portfolio Builder"}. All rights reserved.</p>
     <p className="tracking-widest uppercase">// SECURED VIA CYBER TERMINAL SECURITY //</p>
   </footer>
 );

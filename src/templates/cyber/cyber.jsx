@@ -10,8 +10,14 @@ import {
   CyberCursorOverlay,
   CyberFooter,
   HeroSection,
-  LeftColumnSections,
-  RightColumnSections,
+  BioSection,
+  SkillsSection,
+  ProjectsSection,
+  ServicesSection,
+  TestimonialsSection,
+  CustomStagesSection,
+  TimelineSection,
+  CredentialsSection,
 } from "./components/CyberSections";
 
 const CyberPortfolio = ({ data }) => {
@@ -182,7 +188,7 @@ const CyberPortfolio = ({ data }) => {
         initial="hidden"
         animate={booting ? "hidden" : "show"}
         variants={PAGE_STAGGER}
-        className="w-full min-h-screen bg-[#030304] text-[#00f0ff] antialiased selection:bg-[#ff00ff]/30 selection:text-white relative overflow-hidden font-mono pb-8 lg:cursor-none"
+        className="w-full h-screen overflow-y-auto overflow-x-hidden cyber-scrollbar bg-[#030304] text-[#00f0ff] antialiased selection:bg-[#ff00ff]/30 selection:text-white relative font-mono pb-8 lg:cursor-none"
       >
         <style>{CYBER_GLOBAL_STYLES}</style>
 
@@ -198,7 +204,8 @@ const CyberPortfolio = ({ data }) => {
         <CyberChrome />
 
         <div className="relative z-10 mx-auto max-w-6xl p-4 sm:p-6 lg:p-8 space-y-6">
-          <div className="grid gap-6 md:grid-cols-12 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+            {/* Row 1: Profile & Connect */}
             <HeroSection
               data={data}
               roleTitles={roleTitles}
@@ -207,27 +214,27 @@ const CyberPortfolio = ({ data }) => {
               projects={projects}
               topSkills={topSkills}
             />
-
             <ContactSection contactLinks={contactLinks} />
 
-            <LeftColumnSections
-              data={data}
-              profileStage={profileStage}
-              socialStage={socialStage}
-              projects={projects}
-              services={services}
-              testimonials={testimonials}
-              customStages={customStages}
-            />
+            {/* Row 2: Bio & Skills */}
+            <BioSection data={data} profileStage={profileStage} />
+            <SkillsSection skillsStage={skillsStage} topSkills={topSkills} />
 
-            <RightColumnSections
-              skillsStage={skillsStage}
-              workStage={workStage}
-              publishStage={publishStage}
-              topSkills={topSkills}
-              timelineItems={timelineItems}
-              certifications={certifications}
-            />
+            {/* Row 3: Projects (Full Width 3-Col Bento Grid) */}
+            <ProjectsSection projects={projects} />
+
+            {/* Row 4: Experience & Education Timeline (Full Width Split Layout) */}
+            <TimelineSection workStage={workStage} experiences={experiences} education={education} />
+
+            {/* Row 5: Services / Capabilities */}
+            <ServicesSection socialStage={socialStage} services={services} />
+
+            {/* Row 6: Credentials & Testimonials (Balanced 6-6 Split) */}
+            <CredentialsSection publishStage={publishStage} certifications={certifications} />
+            <TestimonialsSection socialStage={socialStage} testimonials={testimonials} />
+
+            {/* Row 7: Custom Stages */}
+            <CustomStagesSection customStages={customStages} />
           </div>
 
           <CyberFooter name={data.profile?.name} />

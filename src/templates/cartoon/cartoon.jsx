@@ -111,7 +111,7 @@ const CartoonPortfolio = ({ data }) => {
       initial="hidden"
       animate="show"
       variants={PAGE_STAGGER}
-      className="w-full min-h-screen bg-[#fffdf0] text-neutral-900 antialiased selection:bg-[#ec4899] selection:text-white relative overflow-hidden font-sans-lux pb-8 lg:cursor-none"
+      className="w-full h-screen overflow-y-auto overflow-x-hidden cartoon-scrollbar bg-[#fffdf0] text-neutral-900 antialiased selection:bg-[#ec4899] selection:text-white relative font-sans-lux pb-8 lg:cursor-none"
     >
       <ComicStyles />
       <CursorFollower cursorXSpring={cursorXSpring} cursorYSpring={cursorYSpring} isMouseDown={isMouseDown} isClickableHovered={isClickableHovered} />

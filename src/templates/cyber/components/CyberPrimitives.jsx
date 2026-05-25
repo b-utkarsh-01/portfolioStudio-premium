@@ -45,19 +45,31 @@ export const CARD_ITEM = {
   },
 };
 
-export const Section = ({ children, className = "", ...rest }) => (
+export const Section = ({ children, className = "", sysRef = "SYS_NODE", ...rest }) => (
   <motion.section
     variants={FADE_UP}
     className={[
-      "relative rounded-3xl border border-[#00f0ff]/15 bg-black/40 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300 hover:border-[#00f0ff]/30",
+      "relative rounded-3xl border border-[#00f0ff]/15 bg-black/40 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-300 hover:border-[#00f0ff]/30 group/sec",
       className,
     ].join(" ")}
     {...rest}
   >
-    <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#00f0ff]/30" />
-    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#00f0ff]/30" />
-    <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#00f0ff]/30" />
-    <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#00f0ff]/30" />
+    {/* Scanline laser sweep overlay */}
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="card-scanline-laser opacity-0 group-hover/sec:opacity-100 transition-opacity duration-300" />
+    </div>
+
+    {/* Corner Brackets */}
+    <div className="absolute top-0 left-0 w-3 h-3 border-t-2 border-l-2 border-[#00f0ff]/30 group-hover/sec:border-[#ff00ff]/60 group-hover/sec:w-4 group-hover/sec:h-4 transition-all duration-300" />
+    <div className="absolute top-0 right-0 w-3 h-3 border-t-2 border-r-2 border-[#00f0ff]/30 group-hover/sec:border-[#ff00ff]/60 group-hover/sec:w-4 group-hover/sec:h-4 transition-all duration-300" />
+    <div className="absolute bottom-0 left-0 w-3 h-3 border-b-2 border-l-2 border-[#00f0ff]/30 group-hover/sec:border-[#ff00ff]/60 group-hover/sec:w-4 group-hover/sec:h-4 transition-all duration-300" />
+    <div className="absolute bottom-0 right-0 w-3 h-3 border-b-2 border-r-2 border-[#00f0ff]/30 group-hover/sec:border-[#ff00ff]/60 group-hover/sec:w-4 group-hover/sec:h-4 transition-all duration-300" />
+
+    {/* Telemetry watermark tag */}
+    <div className="absolute top-3 right-8 text-[7px] font-mono text-[#00f0ff]/20 select-none tracking-widest hidden sm:block uppercase">
+      {sysRef} // OK_STATUS
+    </div>
+
     {children}
   </motion.section>
 );
@@ -139,6 +151,11 @@ export const Card = ({ children, className = "", ...rest }) => {
       ].join(" ")}
       {...rest}
     >
+      {/* Scanline laser sweep overlay */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="card-scanline-laser opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      </div>
+
       <svg className="absolute inset-0 w-full h-full pointer-events-none rounded-2xl">
         <rect
           x="0"
@@ -154,6 +171,7 @@ export const Card = ({ children, className = "", ...rest }) => {
             strokeDasharray: "100 300",
             strokeDashoffset: 0,
             animation: isHovered ? "laser-sweep 2s linear infinite" : "none",
+            filter: "drop-shadow(0 0 3px #00f0ff) drop-shadow(0 0 1px #ff00ff)",
           }}
         />
       </svg>
@@ -165,6 +183,7 @@ export const Card = ({ children, className = "", ...rest }) => {
     </motion.div>
   );
 };
+
 
 export const EmptyState = ({ message }) => (
   <div className="rounded-2xl border border-dashed border-[#00f0ff]/20 bg-black/40 py-10 text-center">

@@ -10,6 +10,24 @@ export const ComicStyles = () => (
     .noise-bg { background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1.5px, transparent 1.5px); background-size: 20px 20px; }
     .bubble-tail::after { content: ''; position: absolute; bottom: -16px; left: 30px; border-width: 16px 16px 0 0; border-style: solid; border-color: #000 transparent transparent transparent; display: block; width: 0; }
     .bubble-tail-inner::after { content: ''; position: absolute; bottom: -10px; left: 32px; border-width: 12px 12px 0 0; border-style: solid; border-color: #fff transparent transparent transparent; display: block; width: 0; z-index: 10; }
+    .cartoon-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: rgba(236, 72, 153, 0.9) rgba(255, 244, 204, 0.9);
+    }
+    .cartoon-scrollbar::-webkit-scrollbar { width: 12px; height: 12px; }
+    .cartoon-scrollbar::-webkit-scrollbar-track {
+      background: rgba(255, 244, 204, 0.92);
+      border: 2px solid #111;
+      border-radius: 999px;
+    }
+    .cartoon-scrollbar::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #f97316 0%, #ec4899 100%);
+      border-radius: 999px;
+      border: 2px solid #111;
+    }
+    .cartoon-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(180deg, #fb7185 0%, #d946ef 100%);
+    }
     .no-scrollbar::-webkit-scrollbar { display: none; }
     .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   `}</style>

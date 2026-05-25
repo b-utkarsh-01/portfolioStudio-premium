@@ -24,7 +24,28 @@ const TemplateV1Layout = ({
 
   return (
     <PortfolioDataProvider value={portfolioData}>
-      <div className={`relative min-h-screen overflow-x-hidden ${theme.bgClassName} ${theme.textClassName || "text-white"}`}>
+      <div className={`relative h-screen overflow-y-auto overflow-x-hidden nebula-scrollbar ${theme.bgClassName} ${theme.textClassName || "text-white"}`}>
+        <style>{`
+          .nebula-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: rgba(244, 114, 182, 0.95) rgba(10, 8, 26, 0.96);
+            scrollbar-gutter: stable;
+          }
+          .nebula-scrollbar::-webkit-scrollbar { width: 10px; height: 10px; }
+          .nebula-scrollbar::-webkit-scrollbar-track {
+            background: rgba(10, 8, 26, 0.96);
+            border-left: 1px solid rgba(192, 132, 252, 0.35);
+          }
+          .nebula-scrollbar::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, rgba(244, 114, 182, 0.98), rgba(168, 85, 247, 0.98));
+            border-radius: 999px;
+            border: 2px solid rgba(10, 8, 26, 0.96);
+          }
+          .nebula-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, rgba(251, 146, 200, 1), rgba(196, 181, 253, 1));
+          }
+        `}</style>
+
         {showGalaxy ? (
           <div className="pointer-events-none fixed inset-0 z-0">
             <Galaxy
@@ -34,6 +55,8 @@ const TemplateV1Layout = ({
               glowIntensity={theme.galaxy.glowIntensity}
               saturation={theme.galaxy.saturation}
               hueShift={theme.galaxy.hueShift}
+              twinkleIntensity={0.18}
+              rotationSpeed={0.05}
               transparent={false}
             />
           </div>
@@ -65,5 +88,3 @@ const TemplateV1Layout = ({
 };
 
 export default TemplateV1Layout;
-
-
