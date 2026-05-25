@@ -82,20 +82,28 @@ export const executeLinuxCommand = ({
         output: (
           <div className="space-y-4 max-w-3xl">
             <p className="text-white font-bold">TECHNICAL EXPERTISE:</p>
-            <div className="space-y-3">
-              {Object.entries(skillsList).map(([group, list]) => (
-                <div key={group} className={`border ${palette.border} rounded p-3 bg-black/40`}>
-                  <span className={`${palette.badgeText} font-bold text-xs uppercase tracking-wider`}>{group}</span>
-                  <div className="flex flex-wrap gap-2 mt-2">
-                    {list.map((skill, idx) => (
-                      <span key={idx} className={`px-2 py-0.5 border ${palette.border} text-neutral-300 rounded text-xs`}>
-                        {skill}
-                      </span>
-                    ))}
+            {Object.keys(skillsList).length > 0 ? (
+              <div className="space-y-3">
+                {Object.entries(skillsList).map(([group, list]) => (
+                  <div key={group} className={`border ${palette.border} rounded p-3 bg-black/40`}>
+                    <span className={`${palette.badgeText} font-bold text-xs uppercase tracking-wider`}>{group}</span>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                      {list.length > 0 ? (
+                        list.map((skill, idx) => (
+                          <span key={idx} className={`px-2 py-0.5 border ${palette.border} text-neutral-300 rounded text-xs`}>
+                            {skill}
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-neutral-500 italic text-xs">Not added yet</span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-neutral-500 italic text-xs">Skills not added yet.</p>
+            )}
           </div>
         )
       };
@@ -131,31 +139,71 @@ export const executeLinuxCommand = ({
 
     case "experience":
     case "work": {
-      const timeline = [
-        ...experiences.map((exp) => ({ date: exp.period, title: exp.title, subtitle: exp.company, desc: exp.description })),
-        ...education.map((edu) => {
-          const first = edu.items?.[0] || {};
-          return { date: edu.subtitle, title: first.degree || "Degree", subtitle: first.institute || "Institute", desc: "" };
-        })
-      ];
+      const workItems = experiences.map((exp) => ({
+        date: exp.period || "Not added yet",
+        title: exp.title || "Not added yet",
+        subtitle: exp.company || "Not added yet",
+        desc: exp.description || ""
+      }));
+
+      const eduItems = education.flatMap((edu) => {
+        const baseDate = edu.subtitle || "Not added yet";
+        const items = Array.isArray(edu.items) && edu.items.length ? edu.items : [{}];
+        return items.map((item) => ({
+          date: baseDate,
+          title: item.degree || "Not added yet",
+          subtitle: item.institute || "Not added yet",
+          desc: item.description || ""
+        }));
+      });
 
       return {
         output: (
           <div className="space-y-4 max-w-3xl">
             <p className="text-white font-bold">TIMELINE REGISTRY:</p>
-            {timeline.length > 0 ? (
-              <div className="space-y-4 ml-2">
-                {timeline.map((item, idx) => (
-                  <div key={idx} className={`relative pl-6 border-l ${palette.border} pb-4 last:pb-0`}>
-                    <div className={`absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full ${palette.bg} border ${palette.border}`} />
-                    <div className="space-y-1">
-                      <span className={`${palette.badgeText} font-bold text-[10px] uppercase tracking-wide`}>{item.date}</span>
-                      <h3 className="text-white font-bold text-sm leading-snug">{item.title}</h3>
-                      <p className="text-neutral-500 text-xs font-semibold">{item.subtitle}</p>
-                      {item.desc && <p className="text-neutral-400 text-xs leading-relaxed pt-1.5">{item.desc}</p>}
+            {workItems.length || eduItems.length ? (
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <p className={`${palette.text} font-bold text-xs uppercase`}>Work Experience</p>
+                  {workItems.length ? (
+                    <div className="space-y-4 ml-2">
+                      {workItems.map((item, idx) => (
+                        <div key={`work-${idx}`} className={`relative pl-6 border-l ${palette.border} pb-4 last:pb-0`}>
+                          <div className={`absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full ${palette.bg} border ${palette.border}`} />
+                          <div className="space-y-1">
+                            <span className={`${palette.badgeText} font-bold text-[10px] uppercase tracking-wide`}>{item.date}</span>
+                            <h3 className="text-white font-bold text-sm leading-snug">{item.title}</h3>
+                            <p className="text-neutral-500 text-xs font-semibold">{item.subtitle}</p>
+                            {item.desc && <p className="text-neutral-400 text-xs leading-relaxed pt-1.5">{item.desc}</p>}
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                  </div>
-                ))}
+                  ) : (
+                    <p className="text-neutral-500 italic text-xs pl-2">Work experience not added yet.</p>
+                  )}
+                </div>
+
+                <div className="space-y-3">
+                  <p className={`${palette.text} font-bold text-xs uppercase`}>Education</p>
+                  {eduItems.length ? (
+                    <div className="space-y-4 ml-2">
+                      {eduItems.map((item, idx) => (
+                        <div key={`edu-${idx}`} className={`relative pl-6 border-l ${palette.border} pb-4 last:pb-0`}>
+                          <div className={`absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full ${palette.bg} border ${palette.border}`} />
+                          <div className="space-y-1">
+                            <span className={`${palette.badgeText} font-bold text-[10px] uppercase tracking-wide`}>{item.date}</span>
+                            <h3 className="text-white font-bold text-sm leading-snug">{item.title}</h3>
+                            <p className="text-neutral-500 text-xs font-semibold">{item.subtitle}</p>
+                            {item.desc && <p className="text-neutral-400 text-xs leading-relaxed pt-1.5">{item.desc}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-neutral-500 italic text-xs pl-2">Education details not added yet.</p>
+                  )}
+                </div>
               </div>
             ) : (
               <p className="text-neutral-500 italic text-xs">No records registered.</p>
@@ -226,7 +274,7 @@ export const executeLinuxCommand = ({
               <p><span className={`${palette.text}`}>Host:</span> {profile.name || "Developer"}</p>
               <p><span className={`${palette.text}`}>Kernel:</span> ReactTerminal v1.2.0</p>
               <p><span className={`${palette.text}`}>Uptime:</span> {formattedUptime}</p>
-              <p><span className={`${palette.text}`}>Shell:</span> AntigravityBash v4</p>
+              <p><span className={`${palette.text}`}>Shell:</span> PortfolioShell</p>
               <p><span className={`${palette.text}`}>Theme:</span> {palette.name}</p>
               <p><span className={`${palette.text}`}>Projects:</span> {projects.length}</p>
               <p><span className={`${palette.text}`}>Timeline Nodes:</span> {experiences.length + education.length}</p>

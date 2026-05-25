@@ -15,14 +15,50 @@ export const parseLinuxData = (data) => {
       : `${item?.paragraph || ""}`.trim()
   );
 
-  let skillsList = {};
-  if (data?.skills) {
-    if (typeof data.skills === "object" && !Array.isArray(data.skills)) {
-      skillsList = data.skills;
-    } else {
-      skillsList = { "Core Skills": Array.isArray(data.skills) ? data.skills.filter(Boolean) : [] };
+  const normalizeSkills = (rawSkills) => {
+    if (!rawSkills) return {};
+
+    const pushSkill = (bucket, value) => {
+      const next = `${value ?? ""}`.trim();
+      if (!next) return;
+      if (!bucket.some((item) => item.toLowerCase() === next.toLowerCase())) {
+        bucket.push(next);
+      }
+    };
+
+    if (Array.isArray(rawSkills)) {
+      const list = [];
+      rawSkills.forEach((item) => pushSkill(list, item));
+      return list.length ? { "Core Skills": list } : {};
     }
-  }
+
+    if (typeof rawSkills !== "object") return {};
+
+    const merged = {};
+    Object.entries(rawSkills).forEach(([groupName, groupSkills]) => {
+      const cleanGroup = `${groupName ?? ""}`.trim();
+      if (!cleanGroup) return;
+
+      const normalizedKey = cleanGroup.toLowerCase();
+      if (!merged[normalizedKey]) {
+        merged[normalizedKey] = { label: cleanGroup, list: [] };
+      }
+
+      const target = merged[normalizedKey].list;
+      if (Array.isArray(groupSkills)) {
+        groupSkills.forEach((item) => pushSkill(target, item));
+      } else {
+        pushSkill(target, groupSkills);
+      }
+    });
+
+    return Object.values(merged).reduce((acc, item) => {
+      if (item.list.length) acc[item.label] = item.list;
+      return acc;
+    }, {});
+  };
+
+  const skillsList = normalizeSkills(data?.skills);
 
   return { profile, experiences, education, projects, customStages, skillsList };
 };
