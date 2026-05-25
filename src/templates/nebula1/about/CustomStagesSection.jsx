@@ -30,7 +30,7 @@ const CustomStagesSection = () => {
       className="space-y-5"
     >
       {orderedCustomStages.map(({ layoutStage, content }) => (
-        <motion.div key={layoutStage.id} variants={fadeInUp} className="space-y-4">
+        <motion.div id={layoutStage.id} key={layoutStage.id} variants={fadeInUp} className="scroll-mt-24 space-y-4">
           <SectionHeader
             icon={sectionIcons.projects}
             title={layoutStage.title || "Custom Stage"}

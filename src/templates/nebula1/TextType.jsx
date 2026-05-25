@@ -31,7 +31,13 @@ const TextType = ({
   const cursorRef = useRef(null);
   const containerRef = useRef(null);
 
-  const textArray = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
+  const textArray = useMemo(() => {
+    const rawList = Array.isArray(text) ? text : [text];
+    const normalized = rawList
+      .map((item) => (item == null ? "" : `${item}`))
+      .filter((item) => item.length > 0);
+    return normalized.length ? normalized : [""];
+  }, [text]);
 
   const getRandomSpeed = useCallback(() => {
     if (!variableSpeed) return typingSpeed;
@@ -79,7 +85,7 @@ const TextType = ({
     if (!isVisible) return;
 
     let timeout;
-    const currentText = textArray[currentTextIndex];
+    const currentText = textArray[currentTextIndex] ?? "";
     const processedText = reverseMode ? currentText.split('').reverse().join('') : currentText;
 
     const executeTypingAnimation = () => {
@@ -145,8 +151,9 @@ const TextType = ({
     onSentenceComplete
   ]);
 
+  const currentTextLength = (textArray[currentTextIndex] ?? "").length;
   const shouldHideCursor =
-    hideCursorWhileTyping && (currentCharIndex < textArray[currentTextIndex].length || isDeleting);
+    hideCursorWhileTyping && (currentCharIndex < currentTextLength || isDeleting);
 
   return createElement(
     Component,

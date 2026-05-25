@@ -9,7 +9,10 @@ import ServicesSection from "../templates/nebula1/about/ServicesSection";
 import SimpleHeroSection from "../templates/nebula1/about/SimpleHeroSection";
 import SkillsSection from "../templates/nebula1/about/SkillsSection";
 import TestimonialsSection from "../templates/nebula1/about/TestimonialsSection";
-import PlayTimes from "../templates/playtimes/playtimes";
+import Obsidian from "../templates/obsidian/obsidian";
+import CartoonPortfolio from "../templates/cartoon/cartoon";
+import CyberPortfolio from "../templates/cyber/cyber";
+import LinuxPortfolio from "../templates/linux/linux";
 
 const getStage = (stages, id, fallbackTitle) => {
   const match = (Array.isArray(stages) ? stages : []).find((stage) => stage?.id === id);
@@ -22,8 +25,20 @@ const getStage = (stages, id, fallbackTitle) => {
 const PremiumPortfolioRenderer = ({ appReady, templateId = "default-v1" }) => {
   const data = usePortfolioData();
 
-  if (templateId === "premium-playtimes") {
-    return <PlayTimes data={data} />;
+  if (templateId === "premium-obsidian") {
+    return <Obsidian data={data} />;
+  }
+
+  if (templateId === "premium-cartoon") {
+    return <CartoonPortfolio data={data} />;
+  }
+
+  if (templateId === "premium-cyber") {
+    return <CyberPortfolio data={data} />;
+  }
+
+  if (templateId === "premium-linux") {
+    return <LinuxPortfolio data={data} />;
   }
 
   const stages = data.layout?.stages || [];

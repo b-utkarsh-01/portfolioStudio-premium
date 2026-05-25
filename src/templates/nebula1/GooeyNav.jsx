@@ -13,7 +13,8 @@ const GooeyNav = ({
   onNavigate,
   vertical = false,
   syncWithScroll = false,
-  scrollSpyOffset = 120
+  scrollSpyOffset = 120,
+  compact = false
 }) => {
   const containerRef = useRef(null);
   const navRef = useRef(null);
@@ -38,19 +39,22 @@ const GooeyNav = ({
       rotate: rotate > 0 ? (rotate + r / 20) * 10 : (rotate - r / 20) * 10
     };
   };
-  const makeParticles = element => {
+  const makeParticles = (element, burstOrigin) => {
     const d = particleDistances;
     const r = particleR;
     const bubbleTime = animationTime * 2 + timeVariance;
-    element.style.setProperty('--time', `${bubbleTime}ms`);
     for (let i = 0; i < particleCount; i++) {
       const t = animationTime * 2 + noise(timeVariance * 2);
       const p = createParticle(i, t, d, r);
-      element.classList.remove('active');
       setTimeout(() => {
         const particle = document.createElement('span');
         const point = document.createElement('span');
         particle.classList.add('particle');
+        particle.style.position = 'fixed';
+        particle.style.left = `${burstOrigin.x - 10}px`;
+        particle.style.top = `${burstOrigin.y - 10}px`;
+        particle.style.pointerEvents = 'none';
+        particle.style.zIndex = '10001';
         particle.style.setProperty('--start-x', `${p.start[0]}px`);
         particle.style.setProperty('--start-y', `${p.start[1]}px`);
         particle.style.setProperty('--end-x', `${p.end[0]}px`);
@@ -61,13 +65,10 @@ const GooeyNav = ({
         particle.style.setProperty('--rotate', `${p.rotate}deg`);
         point.classList.add('point');
         particle.appendChild(point);
-        element.appendChild(particle);
-        requestAnimationFrame(() => {
-          element.classList.add('active');
-        });
+        document.body.appendChild(particle);
         setTimeout(() => {
           try {
-            element.removeChild(particle);
+            document.body.removeChild(particle);
           } catch {
             // do nothing
           }
@@ -110,6 +111,7 @@ const GooeyNav = ({
     scrollSyncLockUntilRef.current = Date.now() + Math.max(700, navigationDelayMs + 250);
     updateEffectPosition(liEl);
     if (filterRef.current) {
+      filterRef.current.classList.remove('active');
       const particles = filterRef.current.querySelectorAll('.particle');
       particles.forEach(p => filterRef.current.removeChild(p));
     }
@@ -119,7 +121,14 @@ const GooeyNav = ({
       textRef.current.classList.add('active');
     }
     if (filterRef.current) {
-      makeParticles(filterRef.current);
+      const rect = liEl.getBoundingClientRect();
+      requestAnimationFrame(() => {
+        filterRef.current?.classList.add('active');
+      });
+      makeParticles(filterRef.current, {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      });
     }
 
     e.preventDefault();
@@ -319,6 +328,9 @@ const GooeyNav = ({
             color: black;
             text-shadow: none;
           }
+          li.active > a {
+            color: transparent !important;
+          }
           li.active::after {
             opacity: 1;
             transform: scale(1);
@@ -342,7 +354,7 @@ const GooeyNav = ({
           <ul
             ref={navRef}
             className={`list-none p-0 m-0 relative z-[3] flex ${
-              vertical ? 'w-full flex-col gap-2 px-1' : 'gap-8 px-4'
+              vertical ? 'w-full flex-col gap-2 px-1' : compact ? 'gap-3 px-2' : 'gap-8 px-4'
             }`}
             style={{
               color: 'white',
@@ -360,8 +372,8 @@ const GooeyNav = ({
                   onClick={e => handleClick(e, index, item)}
                   href={item.href}
                   onKeyDown={e => handleKeyDown(e, index, item)}
-                  className={`cursor-target cursor-none py-[0.6em] px-[1em] inline-block ${
-                    activeIndex === index ? 'font-bold' : ''
+                className={`cursor-target cursor-none ${compact ? 'py-[0.45em] px-[0.8em] text-sm' : 'py-[0.6em] px-[1em]'} inline-block font-sans font-medium leading-none tracking-normal ${
+                    activeIndex === index ? 'font-semibold' : ''
                   } ${vertical ? 'w-full text-center' : ''}`}
                 >
                   {item.label}

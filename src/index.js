@@ -1,7 +1,9 @@
 export { premiumV1Template } from "./templates/nebula1/premium-v1.template";
-export { premiumPlaytimesTemplate } from "./templates/playtimes/premium-playtimes.template";
+export { premiumObsidianTemplate } from "./templates/obsidian/premium-obsidian.template";
+export { premiumCartoonTemplate } from "./templates/cartoon/premium-cartoon.template";
+export { premiumCyberTemplate } from "./templates/cyber/premium-cyber.template";
 export { premiumTemplates } from "./premium.templates";
-export const PREMIUM_TEMPLATE_IDS = ["premium-v1", "premium-playtimes"];
+export const PREMIUM_TEMPLATE_IDS = ["premium-v1", "premium-obsidian", "premium-cartoon", "premium-cyber"];
 
 export { default as TemplateV1Layout } from "./templates/nebula1/layout/TemplateV1Layout";
 export { default as PremiumPortfolioRenderer } from "./portfolio/PortfolioRenderer";
@@ -31,4 +33,6 @@ export {
 } from "./templates/nebula1/about/aboutData";
 
 
-export { default as PlayTimes } from "./templates/playtimes/playtimes";
+export { default as Obsidian } from "./templates/obsidian/obsidian";
+export { default as CartoonPortfolio } from "./templates/cartoon/cartoon";
+export { default as CyberPortfolio } from "./templates/cyber/cyber";

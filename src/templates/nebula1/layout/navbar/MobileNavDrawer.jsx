@@ -3,11 +3,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 import GooeyNav from "../../GooeyNav.jsx";
 import { gooeyProps } from "./config";
+import { useNebulaNavItems } from "./useNebulaNavItems";
 
 const MobileNavDrawer = ({ isOpen, onClose }) => {
+  const items = useNebulaNavItems();
   const [mobileActiveIndex, setMobileActiveIndex] = useState(
     gooeyProps.initialActiveIndex ?? 0
   );
+
+  if (!items.length) return null;
 
   return (
     <AnimatePresence>
@@ -48,6 +52,7 @@ const MobileNavDrawer = ({ isOpen, onClose }) => {
             <div className="m-auto w-full text-center">
               <GooeyNav
                 {...gooeyProps}
+                items={items}
                 initialActiveIndex={mobileActiveIndex}
                 vertical
                 navigationDelayMs={500}

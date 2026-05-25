@@ -1,14 +1,4 @@
-export const navItems = [
-  { label: "Home", href: "#hero" },
-  { label: "Education", href: "#education" },
-  { label: "Skills", href: "#skills" },
-  { label: "Experience", href: "#experience" },
-  { label: "Projects", href: "#projects" },
-  { label: "Certifications", href: "#certifications" },
-];
-
 export const gooeyProps = {
-  items: navItems,
   particleCount: 15,
   particleDistances: [90, 10],
   particleR: 100,

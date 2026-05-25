@@ -15,7 +15,7 @@ Shared runtime-level files:
 ## Add a new premium template
 
 1. Create a new folder:
-- `src/templates/playtimes/`
+- `src/templates/obsidian/`
 
 2. Add all template-specific code inside that folder:
 - layout

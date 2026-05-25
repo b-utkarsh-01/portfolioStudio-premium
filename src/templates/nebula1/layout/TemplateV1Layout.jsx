@@ -1,6 +1,6 @@
-import { CircleArrowLeft } from "lucide-react";
+﻿import { CircleArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { defaultTemplates } from "portfolio-studio-default/src";
+import { defaultTemplates } from "portfolio-studio-default";
 import Galaxy from "../Galaxy";
 import TargetCursor from "../TargetCursor";
 import { PortfolioDataProvider } from "../features/portfolio/PortfolioDataContext";
@@ -50,7 +50,7 @@ const TemplateV1Layout = ({
                 Back
               </Link>
               <p className="w-[80%] text-center text-sm text-slate-300">
-                {theme.title} � {template?.name || "Template"}
+                {theme.title} · {template?.name || "Template"}
               </p>
             </div>
           ) : null}
@@ -65,4 +65,5 @@ const TemplateV1Layout = ({
 };
 
 export default TemplateV1Layout;
+
 
