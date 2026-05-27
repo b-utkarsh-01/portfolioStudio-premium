@@ -2,7 +2,7 @@ export const premiumV1Template = {
   id: "premium-v1",
   tier: "premium",
   name: "Premium Nebula",
-  description: "Creative visual style with richer glow and contrast accents.",
+  description: "Immersive nebula-inspired experience with interactive galaxy motion, luminous depth, and high-contrast futuristic storytelling.",
   theme: {
     bgClassName: "bg-[#090412]",
     cardClassName: "border-fuchsia-400/50 bg-fuchsia-950/40 text-fuchsia-100 hover:bg-fuchsia-900/40",
