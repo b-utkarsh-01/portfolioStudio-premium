@@ -29,8 +29,10 @@ const ObsidianTopRow = ({ data, nameParts, roleTitles, experiences, education, t
                 {(data.badgeName?.name || "Portfolio")} {data.badgeName?.badgeTitle ? `| ${data.badgeName.badgeTitle}` : ""}
               </p>
             ) : null}
-            <h1 className="text-4xl sm:text-7xl font-extralight leading-none tracking-tight font-serif-lux text-white select-none">
-              {nameParts.first} <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-[#dfb76c] via-[#f7e1b5] to-[#c69a4b] text-glow-gold">{nameParts.last}</span>
+            <h1 className="text-4xl sm:text-7xl font-extralight leading-none tracking-tight font-serif-lux select-none">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#dfb76c] via-[#f7e1b5] to-[#c69a4b] text-glow-gold">
+                {nameParts.first} {nameParts.last}
+              </span>
             </h1>
             <div className="flex flex-wrap gap-2 pt-1">
               {(roleTitles.length ? roleTitles : ["Creative Designer"]).map((title) => (
