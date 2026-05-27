@@ -24,21 +24,43 @@ const getStage = (stages, id, fallbackTitle) => {
 
 const PremiumPortfolioRenderer = ({ appReady, templateId = "default-v1" }) => {
   const data = usePortfolioData();
+  const withSafeText = (node) => (
+    <div className="template-safe-text">
+      <style>{`
+        .template-safe-text p,
+        .template-safe-text h1,
+        .template-safe-text h2,
+        .template-safe-text h3,
+        .template-safe-text h4,
+        .template-safe-text h5,
+        .template-safe-text h6,
+        .template-safe-text span,
+        .template-safe-text li,
+        .template-safe-text a,
+        .template-safe-text blockquote {
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          max-width: 100%;
+        }
+      `}</style>
+      {node}
+    </div>
+  );
 
   if (templateId === "premium-obsidian") {
-    return <Obsidian data={data} />;
+    return withSafeText(<Obsidian data={data} />);
   }
 
   if (templateId === "premium-cartoon") {
-    return <CartoonPortfolio data={data} />;
+    return withSafeText(<CartoonPortfolio data={data} />);
   }
 
   if (templateId === "premium-cyber") {
-    return <CyberPortfolio data={data} />;
+    return withSafeText(<CyberPortfolio data={data} />);
   }
 
   if (templateId === "premium-linux") {
-    return <LinuxPortfolio data={data} />;
+    return withSafeText(<LinuxPortfolio data={data} />);
   }
 
   const stages = data.layout?.stages || [];
@@ -49,7 +71,7 @@ const PremiumPortfolioRenderer = ({ appReady, templateId = "default-v1" }) => {
   const socialStage = getStage(stages, "social", "Services & Reviews");
   const publishStage = getStage(stages, "publish", "Publish");
 
-  return (
+  return withSafeText(
     <div id="top" className="mx-auto max-w-6xl space-y-8 pb-32 sm:pb-36">
       {profileStage.enabled ? (
         <section id="hero" className="scroll-mt-24 no-cursor-target">
