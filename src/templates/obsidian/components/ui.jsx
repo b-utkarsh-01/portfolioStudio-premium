@@ -1,4 +1,4 @@
-﻿import { motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 
 export const PAGE_STAGGER = {
@@ -30,12 +30,19 @@ export const Section = ({ children, className = "", ...rest }) => (
   <motion.section
     variants={FADE_UP}
     className={[
-      "relative rounded-3xl border border-[#dfb76c]/15 bg-neutral-950/20 backdrop-blur-2xl p-6 sm:p-8 shadow-[0_20px_50px_rgba(0,0,0,0.8)] overflow-hidden transition-all duration-500 hover:border-[#dfb76c]/30 group/section",
+      "relative rounded-3xl border border-[#dfb76c]/15 bg-gradient-to-br from-[#0c0c12]/95 via-[#07070a]/98 to-[#030304]/100 backdrop-blur-3xl p-6 sm:p-8 shadow-[0_30px_70px_rgba(0,0,0,0.95)] overflow-hidden transition-all duration-700 hover:border-[#dfb76c]/30 group/section",
       className,
     ].join(" ")}
     {...rest}
   >
-    <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-[#dfb76c]/5 to-transparent blur-xl pointer-events-none transition-opacity duration-500" />
+    {/* Subtle Luxury Gold Edge Highlight */}
+    <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#dfb76c]/20 to-transparent opacity-0 group-hover/section:opacity-100 transition-opacity duration-700 pointer-events-none" />
+    
+    {/* Corner Decorative Trims */}
+    <div className="absolute top-4 right-4 w-1.5 h-1.5 border-t border-r border-[#dfb76c]/30 pointer-events-none group-hover/section:border-[#dfb76c]/60 transition-colors duration-700" />
+    <div className="absolute bottom-4 left-4 w-1.5 h-1.5 border-b border-l border-[#dfb76c]/30 pointer-events-none group-hover/section:border-[#dfb76c]/60 transition-colors duration-700" />
+
+    <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-bl from-[#dfb76c]/5 to-transparent blur-2xl pointer-events-none opacity-50 group-hover/section:opacity-100 transition-opacity duration-700" />
     <div className="relative z-10">{children}</div>
   </motion.section>
 );
@@ -48,7 +55,7 @@ export const SectionHeading = ({ label, title, icon: IconComponent }) => (
         <span className="text-[10px] font-bold uppercase tracking-[0.3em] text-[#dfb76c] font-accent-lux">{label}</span>
       </div>
     )}
-    <h2 className="text-3xl font-light tracking-tight text-white font-serif-lux leading-tight">{title}</h2>
+    <h2 className="text-3xl font-light tracking-tight bg-gradient-to-r from-white via-white to-neutral-400 bg-clip-text text-transparent font-serif-lux leading-tight">{title}</h2>
   </div>
 );
 
@@ -96,13 +103,13 @@ export const Card = ({ children, className = "", ...rest }) => {
       onMouseLeave={handleMouseLeave}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.015, 1.015, 1.015)`
+          ? `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`
           : `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`,
-        transition: isHovered ? "none" : "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition: isHovered ? "none" : "all 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
         transformStyle: "preserve-3d",
       }}
       className={[
-        "relative rounded-2xl border border-[#dfb76c]/10 bg-neutral-950/50 p-5 transition-all duration-300 hover:border-[#dfb76c]/30 hover:bg-neutral-950/70 overflow-hidden cursor-none card-glow-hover",
+        "relative rounded-2xl border border-[#dfb76c]/10 bg-gradient-to-b from-[#0a0a0f]/60 to-[#040406]/80 p-5 transition-all duration-300 hover:border-[#dfb76c]/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.6),_0_0_20px_rgba(223,183,108,0.05)] overflow-hidden cursor-none card-glow-hover",
         className,
       ].join(" ")}
       {...rest}
@@ -114,7 +121,7 @@ export const Card = ({ children, className = "", ...rest }) => {
         <div
           className="pointer-events-none absolute inset-0 z-0 opacity-40 transition-opacity duration-300"
           style={{
-            background: `radial-gradient(circle 220px at ${shineX}px ${shineY}px, rgba(223, 183, 108, 0.12), transparent 80%)`,
+            background: `radial-gradient(circle 200px at ${shineX}px ${shineY}px, rgba(223, 183, 108, 0.15), transparent 85%)`,
           }}
         />
       )}

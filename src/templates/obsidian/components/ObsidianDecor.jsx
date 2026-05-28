@@ -112,7 +112,8 @@ export const ObsidianCursor = ({
 export const ObsidianBackground = ({ bgOffset }) => (
   <>
     <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-      <div className="absolute inset-0 noise-bg opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 noise-bg opacity-25 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_30%,transparent_10%,#040407_80%)] opacity-85 pointer-events-none" />
       <motion.div style={{ x: bgOffset.x * 0.9, y: bgOffset.y * 0.9 }} className="absolute top-[-15%] left-[-15%] w-[800px] h-[800px] rounded-full bg-violet-950/25 blur-[150px] animate-blob-slow" />
       <motion.div style={{ x: bgOffset.x * -0.7, y: bgOffset.y * -0.7 }} className="absolute top-[8%] right-[-15%] w-[900px] h-[900px] rounded-full bg-amber-500/10 blur-[170px] animate-blob-medium" />
       <motion.div style={{ x: bgOffset.x * 0.8, y: bgOffset.y * 0.8 }} className="absolute top-[40%] left-[-20%] w-[750px] h-[750px] rounded-full bg-fuchsia-950/15 blur-[160px] animate-blob-slow" />

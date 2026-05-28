@@ -44,12 +44,25 @@ const ObsidianRightColumn = ({
               key={idx}
               onMouseEnter={() => setHoveredTimelineIdx(idx)}
               onMouseLeave={() => setHoveredTimelineIdx(null)}
-              className="timeline-card-target relative pl-6 border-l border-[#dfb76c]/15 pb-6 group"
+              className="timeline-card-target relative pl-8 pb-6 group transition-all duration-300"
             >
-              <div className={`absolute -left-[6px] top-1.5 w-3 h-3 rounded-full bg-neutral-950 border border-[#dfb76c]/40 transition-all duration-300 ${hoveredTimelineIdx === idx ? "bg-[#dfb76c] border-[#dfb76c] scale-125 shadow-[0_0_12px_#dfb76c]" : "group-hover:bg-[#dfb76c] group-hover:border-[#dfb76c] group-hover:shadow-[0_0_8px_#dfb76c]"}`} />
-              <span className="text-[9px] text-[#dfb76c] font-bold font-accent-lux uppercase tracking-wider">{item.date}</span>
-              <h3 className="font-serif-lux text-sm text-white font-medium leading-snug">{item.title}</h3>
-              <p className="text-[10px] font-bold text-neutral-400 font-accent-lux">{item.subtitle}</p>
+              {/* Vertical Gradient Timeline Line */}
+              <div className="absolute left-0 top-2 bottom-0 w-[1px] bg-gradient-to-b from-[#dfb76c]/20 via-[#dfb76c]/5 to-transparent pointer-events-none" />
+              <div className={`absolute left-0 top-2 bottom-0 w-[1px] bg-gradient-to-b from-[#dfb76c] to-transparent pointer-events-none transition-opacity duration-500 ${hoveredTimelineIdx === idx ? "opacity-100" : "opacity-0"}`} />
+
+              {/* Bullet Node Indicator */}
+              <div className={`absolute -left-[3.5px] top-[7px] w-2 h-2 rounded-full bg-neutral-950 border border-[#dfb76c]/40 transition-all duration-300 ${hoveredTimelineIdx === idx ? "bg-[#dfb76c] border-[#dfb76c] scale-125 shadow-[0_0_12px_#dfb76c]" : "group-hover:bg-[#dfb76c] group-hover:border-[#dfb76c]"}`} />
+
+              <div className="space-y-1">
+                <span className="text-[9px] text-[#dfb76c] font-bold font-accent-lux uppercase tracking-widest">{item.date}</span>
+                <h3 className="font-serif-lux text-base text-white font-light leading-snug group-hover:text-[#dfb76c] transition-colors">{item.title}</h3>
+                <p className="text-[10px] font-bold text-neutral-400 font-accent-lux tracking-wide uppercase">{item.subtitle}</p>
+                {item.description && (
+                  <p className="text-xs text-neutral-500 font-sans-lux leading-relaxed font-light mt-1.5 max-w-sm line-clamp-3">
+                    {item.description}
+                  </p>
+                )}
+              </div>
             </div>
           ))}
         </div>

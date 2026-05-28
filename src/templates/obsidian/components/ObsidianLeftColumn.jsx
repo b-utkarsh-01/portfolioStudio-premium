@@ -27,18 +27,36 @@ const ObsidianLeftColumn = ({ data, profileStage, projects, socialStage, service
         </div>
 
         <motion.div variants={CARD_STAGGER} initial="hidden" whileInView="show" viewport={{ once: true }} className="grid gap-4 sm:grid-cols-2">
-          {projects.map((item, idx) => (
-            <Card key={`${item.name}-${idx}`} className="project-card-target flex flex-col justify-between min-h-[180px] group">
-              <div className="space-y-3">
-                <div className="flex justify-between items-start">
-                  <span className="font-accent-lux text-[9px] text-[#dfb76c]/70 font-semibold tracking-wider">PROJECT // 0{idx + 1}</span>
-                  <ArrowUpRight className="w-4 h-4 text-neutral-600 group-hover:text-[#dfb76c]" />
+          {projects.map((item, idx) => {
+            const techList = Array.isArray(item.tech) 
+              ? item.tech 
+              : typeof item.tech === "string" 
+                ? item.tech.split(",").map(t => t.trim()).filter(Boolean) 
+                : [];
+
+            return (
+              <Card key={`${item.name}-${idx}`} className="project-card-target flex flex-col justify-between min-h-[200px] group">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start">
+                    <span className="font-accent-lux text-[9px] text-[#dfb76c]/70 font-semibold tracking-wider">PROJECT // 0{idx + 1}</span>
+                    <ArrowUpRight className="w-4 h-4 text-neutral-600 group-hover:text-[#dfb76c] transition-colors" />
+                  </div>
+                  <h3 className="font-serif-lux text-xl text-white font-light group-hover:text-[#dfb76c] transition-colors leading-tight">{item.name}</h3>
+                  <p className="text-xs text-neutral-400 font-sans-lux leading-relaxed line-clamp-3 font-light">{item.description}</p>
                 </div>
-                <h3 className="font-serif-lux text-lg text-white font-medium group-hover:text-[#dfb76c] transition-colors leading-tight">{item.name}</h3>
-                <p className="text-xs text-neutral-400 font-sans-lux leading-relaxed line-clamp-3 font-light">{item.description}</p>
-              </div>
-            </Card>
-          ))}
+
+                {techList.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.04] mt-4">
+                    {techList.slice(0, 3).map((t) => (
+                      <span key={t} className="text-[9px] font-mono text-neutral-400 uppercase tracking-widest bg-neutral-900/60 px-2 py-0.5 rounded border border-white/[0.02] group-hover:border-[#dfb76c]/10 transition-colors">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </Card>
+            );
+          })}
         </motion.div>
       </Section>
     ) : null}

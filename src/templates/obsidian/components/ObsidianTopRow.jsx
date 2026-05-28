@@ -29,20 +29,20 @@ const ObsidianTopRow = ({ data, nameParts, roleTitles, experiences, education, t
                 {(data.badgeName?.name || "Portfolio")} {data.badgeName?.badgeTitle ? `| ${data.badgeName.badgeTitle}` : ""}
               </p>
             ) : null}
-            <h1 className="text-4xl sm:text-7xl font-extralight leading-none tracking-tight font-serif-lux select-none text-[#dfb76c] text-glow-gold">
+            <h1 className="text-4xl sm:text-7xl font-extralight leading-none tracking-tight font-serif-lux select-none bg-gradient-to-r from-[#f3e7c4] via-[#dfb76c] to-[#a47734] bg-clip-text text-transparent filter drop-shadow-[0_2px_10px_rgba(223,183,108,0.15)] pb-1">
               {nameParts.first} {nameParts.last}
             </h1>
             <div className="flex flex-wrap gap-2 pt-1">
               {(roleTitles.length ? roleTitles : ["Creative Designer"]).map((title) => (
-                <span key={title} className="rounded-full border border-[#dfb76c]/30 bg-neutral-950/60 px-3.5 py-1 text-[10px] font-semibold tracking-wider text-[#dfb76c] font-accent-lux shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
+                <span key={title} className="rounded-full border border-[#dfb76c]/30 bg-neutral-950/60 px-4 py-1.5 text-[9px] font-bold tracking-widest text-[#dfb76c] font-accent-lux shadow-[0_4px_12px_rgba(0,0,0,0.3)]">
                   {title.toUpperCase()}
                 </span>
               ))}
             </div>
             {Array.isArray(data.profile?.highlights) && data.profile.highlights.filter(Boolean).length > 0 ? (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 pt-1">
                 {data.profile.highlights.filter(Boolean).slice(0, 4).map((item) => (
-                  <span key={item} className="rounded-full border border-[#dfb76c]/20 bg-black/30 px-2.5 py-1 text-[10px] font-semibold text-[#dfb76c]">
+                  <span key={item} className="rounded-full border border-[#dfb76c]/20 bg-[#dfb76c]/[0.02] px-3 py-1 text-[9px] font-bold text-[#dfb76c]/80 font-accent-lux tracking-wider uppercase">
                     #{item}
                   </span>
                 ))}
@@ -51,30 +51,30 @@ const ObsidianTopRow = ({ data, nameParts, roleTitles, experiences, education, t
           </div>
 
           {data.profile?.avatar && (
-            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#dfb76c]/20 bg-neutral-900 overflow-hidden flex-shrink-0 shadow-[0_8px_30px_rgba(0,0,0,0.6)] relative group">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#dfb76c]/20 bg-neutral-900 overflow-hidden flex-shrink-0 shadow-[0_8px_30px_rgba(0,0,0,0.8)] relative group">
               <img src={data.profile.avatar} alt={data.profile.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
               <div className="absolute inset-0 bg-[#dfb76c]/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
             </div>
           )}
         </div>
 
-        <p className="max-w-2xl text-lg font-light leading-relaxed text-neutral-300 font-sans-lux">
+        <p className="max-w-2xl text-lg font-light leading-relaxed text-neutral-300 font-sans-lux pt-3">
           {data.profile?.summary || "Passionate developer & designer crafting elegant digital masterpieces using modern standards."}
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 border-t border-white/[0.04] pt-6 mt-8">
-        <div>
-          <p className="text-2xl sm:text-4xl font-light font-serif-lux text-white">{experiences.length > 0 ? `${experiences.length + education.length}+` : "05+"}</p>
-          <p className="text-[10px] font-bold tracking-wider uppercase text-neutral-500 font-accent-lux mt-0.5">Milestones</p>
+      <div className="grid grid-cols-3 gap-4 border-t border-white/[0.04] pt-6 mt-8 relative">
+        <div className="space-y-1">
+          <p className="text-3xl sm:text-5xl font-extralight font-serif-lux bg-gradient-to-r from-[#f3e7c4] to-[#dfb76c] bg-clip-text text-transparent">{experiences.length > 0 ? `${experiences.length + education.length}+` : "05+"}</p>
+          <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase text-neutral-500 font-accent-lux mt-1">Milestones</p>
         </div>
-        <div>
-          <p className="text-2xl sm:text-4xl font-light font-serif-lux text-white">{(data.projects || []).length > 0 ? `${(data.projects || []).length}+` : "12+"}</p>
-          <p className="text-[10px] font-bold tracking-wider uppercase text-neutral-500 font-accent-lux mt-0.5">Completed Projects</p>
+        <div className="space-y-1 border-l border-white/[0.04] pl-4 sm:pl-8">
+          <p className="text-3xl sm:text-5xl font-extralight font-serif-lux bg-gradient-to-r from-[#f3e7c4] to-[#dfb76c] bg-clip-text text-transparent">{(data.projects || []).length > 0 ? `${(data.projects || []).length}+` : "12+"}</p>
+          <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase text-neutral-500 font-accent-lux mt-1">Projects</p>
         </div>
-        <div>
-          <p className="text-2xl sm:text-4xl font-light font-serif-lux text-white">{topSkills.length > 0 ? `${topSkills.length}` : "10+"}</p>
-          <p className="text-[10px] font-bold tracking-wider uppercase text-neutral-500 font-accent-lux mt-0.5">Areas of Expertise</p>
+        <div className="space-y-1 border-l border-white/[0.04] pl-4 sm:pl-8">
+          <p className="text-3xl sm:text-5xl font-extralight font-serif-lux bg-gradient-to-r from-[#f3e7c4] to-[#dfb76c] bg-clip-text text-transparent">{topSkills.length > 0 ? `${topSkills.length}` : "10+"}</p>
+          <p className="text-[9px] sm:text-[10px] font-bold tracking-[0.15em] uppercase text-neutral-500 font-accent-lux mt-1">Expertise</p>
         </div>
       </div>
     </Section>
