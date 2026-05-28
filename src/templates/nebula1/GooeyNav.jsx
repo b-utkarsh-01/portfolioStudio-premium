@@ -192,8 +192,11 @@ const GooeyNav = ({
         }
       });
 
-      const nearBottom =
-        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 24;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const viewportHeight = window.innerHeight;
+      const scrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      const canScroll = scrollHeight - viewportHeight > 48;
+      const nearBottom = canScroll && viewportHeight + scrollY >= scrollHeight - 24;
       if (nearBottom) {
         nextIndex = sectionItems[sectionItems.length - 1].index;
       }
